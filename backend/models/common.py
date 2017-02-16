@@ -5,7 +5,7 @@ from backend import db
 from backend import app
 
 
-class BaseModel(object):
+class BaseModel(dict):
     """
     new models should extend from BaseModel
     __column_fileds__={'name':String,'age':Integer}
@@ -104,7 +104,7 @@ class BaseModel(object):
         new_row = dict()
         for key in self.__column_fileds__:
             if getattr(self, key, None) is None:
-                raise Exception('the name of {} is not deefined!'.format(key))
+                raise Exception('the name of {} is not defined!'.format(key))
             else:
                 new_row.update({key: getattr(self, key)})
         return self.insert_one(new_row)

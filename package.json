@@ -23,12 +23,14 @@
     "transfer-webpack-plugin": "^0.1.4",
     "url-loader": "^0.5.7",
     "vue": "^2.1.8",
+    "vue-hot-reload-api": "^2.0.8",
     "vue-loader": "^10.3.0",
     "vue-router": "^2.2.0",
     "vue-template-compiler": "^2.1.10",
     "vuex": "^2.1.1",
     "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
     "babel-plugin-component": "^0.9.0"

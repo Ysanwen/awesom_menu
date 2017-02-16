@@ -94,7 +94,6 @@ def parse_arguments(*ars):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            print(args, kwargs)
             new_arguments = dict()
             arguments = args[1]
             argument_key = arguments.keys()

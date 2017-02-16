@@ -4,6 +4,7 @@ import importlib
 from flask import Flask
 from flask_script import Manager
 from flask_dataset import Dataset
+from flask_login import LoginManager
 
 app = Flask(__name__)
 
@@ -16,6 +17,8 @@ app.jinja_options = new_jinja_con
 db = Dataset(app)
 
 manager = Manager(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 def create_app(env='development'):

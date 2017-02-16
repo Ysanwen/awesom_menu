@@ -7,11 +7,10 @@ from backend.models import User
 class TestApi(ApiAction):
     @request_method_check(['POST'])
     @parse_arguments(
-        Argument('username', str, default='not know', required=False),
-        Argument('age', int, default=0, required=True),
-        Argument('gender', str, default='male', required=True))
+        Argument('mobile', str, default='not know', required=False),
+        Argument('password', str, default=0, required=True))
     def create_user(self, arguments):
-        user = User(arguments['username'], arguments['age'], arguments['gender'])
+        user = User(arguments['mobile'], arguments['password'])
         result = user.save()
         return self.is_done(result)
 

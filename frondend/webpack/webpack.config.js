@@ -14,7 +14,7 @@ if (mode === 'production') {
 }
 
 module.exports = {
-    entry: path.resolve(__dirname, '../app/main.js'),
+    entry: [path.resolve(__dirname, '../app/main.js'),'whatwg-fetch'],
     output: {
         path: path.resolve(__dirname, '../build'),
         filename: 'build/build.js'
