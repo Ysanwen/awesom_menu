@@ -1,16 +1,23 @@
 # -*-coding:utf-8-*-
 
 from .views_blueprint import view_bp
-from flask import render_template, request, redirect, jsonify, session
+from flask import render_template, request, jsonify, session
 from backend.models.users import User, load_user
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, login_required
 from backend import login_manager
 
 
 @view_bp.route('/')
+@view_bp.route('index')
 def index():
     # return 'hello world!'
     return render_template('index.html')
+
+
+@ view_bp.route('admin_panel')
+@login_required
+def admin_panle():
+    return render_template('admin_panel.html')
 
 
 @view_bp.route('api/sign_in', methods=['POST'])
@@ -24,7 +31,7 @@ def sign_in():
             user = load_user(user['id'])
             login_user(user, remember=True)
 
-            return jsonify({"success": True, 'message': 'login allowed', 'current_user': dict(current_user)})
+            return jsonify({"success": True, 'redirect_url': 'admin_panel'})
         else:
             return jsonify({"success": False, "message": "mobile or password not correct"})
     else:
@@ -48,7 +55,7 @@ def sign_up():
         user = User(mobile, password1)
         user.save()
         login_user(load_user(user.id), remember=True)
-        return jsonify({"success": True, 'message': 'sign up allowed', 'current_user': dict(current_user)})
+        return jsonify({"success": True, 'redirect_url': 'admin_panel'})
     else:
         return jsonify({"success": False, "message": "data form is not correct"})
 
@@ -56,7 +63,7 @@ def sign_up():
 @view_bp.route('api/sign_out', methods=['GET'])
 def sign_out():
     logout_user()
-    return redirect('/')
+    return jsonify({"success": True, 'redirect_url': 'index'})
 
 
-login_manager.login_view = 'views.index'
+login_manager.login_view = 'view.index'

@@ -2,6 +2,7 @@
 from flask import session
 from .common import ApiAction, request_method_check, Argument, parse_arguments
 from backend.models import User
+from flask_login import current_user
 
 import random
 
@@ -33,6 +34,5 @@ class UserApi(ApiAction):
         return self.is_done({'verify_code': verify_code})
 
     @request_method_check(['GET'])
-    def get_all_user(self, arguments):
-        all_data = User.find()
-        return self.is_done(all_data)
+    def get_current_user(self, arguments):
+        return self.is_done(dict(current_user))

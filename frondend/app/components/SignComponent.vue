@@ -25,6 +25,7 @@
 
 <script>
     import ApiRequest from '../common/ApiRequest.js'
+    import { Message } from 'element-ui'
     module.exports = {
         props: ['showDialog','clickType'],
         computed:{
@@ -110,7 +111,12 @@
                     }
 
                     ApiRequest.ajPost(url,data,(json)=>{
-                        console.log(json)
+                        if(json.success){
+                            let base_url = window.location.host;
+                            window.location.href = '/'+json.redirect_url
+                        }else{
+                            Message.error(json.message)
+                        }
                     })
                   } else {
                     alert('error submit!!');

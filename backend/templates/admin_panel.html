@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
+  <title>Awesome Admin Panel</title>
+</head>
+<body>
+  <div id="admin_panel">
+    <div class="header">
+      <el-row>
+        <el-col :span="4" ><div class="header-left"></div></el-col>
+        <el-col :span="16" ><div class="header-center">Awesome Menu Platform</div></el-col>
+        <el-col :span="4" >
+          <div class="header-right">
+            <el-dropdown class="drop-down">
+              <el-button type="primary">
+                欢迎您，{{ username }}<i class="el-icon-caret-bottom el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu> 
+            </el-dropdown>
+          </div>
+        </el-col>
+      </el-row>
+        
+    </div>
+    
+    <div class="content">
+      <el-row class="content_row">
+        <left-nav></left-nav>
+      </el-row>
+    </div>
+    
+  </div>
+<script src="http://localhost:8080/build/admin_panel.js"></script>
+</body>
+</html>

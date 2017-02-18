@@ -14,10 +14,13 @@ if (mode === 'production') {
 }
 
 module.exports = {
-    entry: [path.resolve(__dirname, '../app/main.js'),'whatwg-fetch'],
+    entry: {
+      main:path.resolve(__dirname, '../app/main.js'),
+      admin_panel:path.resolve(__dirname, '../app/admin_panel.js')
+    },
     output: {
         path: path.resolve(__dirname, '../build'),
-        filename: 'build/build.js'
+        filename: 'build/[name].js'
     },
 
     resolve: {
@@ -36,7 +39,14 @@ module.exports = {
         template: './frondend/index.html',
         filename: path.resolve(__dirname, '../../backend/templates/index.html'),
         inject: false,
-        jspath:baseUrl+'build/build.js'
+        jspath:baseUrl+'build/main.js'
+      }),
+      new HtmlWebpackPlugin({
+        alwaysWriteToDisk: true,
+        template: './frondend/admin_panel.html',
+        filename: path.resolve(__dirname, '../../backend/templates/admin_panel.html'),
+        inject: false,
+        jspath:baseUrl+'build/admin_panel.js'
       }),
       new CopyWebpackPlugin(
         [{from:path.resolve(__dirname, '../build'),to:path.resolve(__dirname, '../../backend/static')}]
@@ -59,7 +69,7 @@ module.exports = {
           loader: 'style-loader!css-loader'
         }, {
           test: /\.less$/,
-          loader: 'style!css!less'
+          loader: 'style-loader!css-loader!less-loader'
         },{
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'file-loader?publicPath='+baseUrl
