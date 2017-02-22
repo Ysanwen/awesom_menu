@@ -13,10 +13,10 @@
     </div>
     <sign-component :show-dialog="showDialog" :click-type="clickType"></sign-component>
     <div class="content">
-        <div class="message">{{ message }}</div>
+        <div class="message" v-cloak>{{message}}</div>
     </div>
     
   </div>
-<script src="http://localhost:8080/build/main.js"></script>
+  <script src="http://localhost:8080/build/main.js"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@ class User(BaseModel):
         'id': sqlalchemy.String,
         'username': sqlalchemy.String(50),
         'password': sqlalchemy.String,
-        'mobile': sqlalchemy.String,
+        'mobile': sqlalchemy.BigInteger,
         'create_time': sqlalchemy.String,
         'isActive': sqlalchemy.Boolean
     }

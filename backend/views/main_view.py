@@ -26,7 +26,7 @@ def sign_in():
     mobile = data_form.get('mobile', None)
     password1 = data_form.get('password1', None)
     if mobile and password1:
-        user = User.find_one(mobile=str(mobile))
+        user = User.find_one(mobile=int(mobile))
         if user and user['isActive'] and User.validate_login(user['password'], password1):
             user = load_user(user['id'])
             login_user(user, remember=True)
@@ -50,7 +50,7 @@ def sign_up():
             return jsonify({"success": False, "message": "password is not correct"})
         if verify_code != int(session.get(str(mobile), None)):
             return jsonify({"success": False, "message": "verify_code is not correct"})
-        if User.find_one(mobile=str(mobile)):
+        if User.find_one(mobile=int(mobile)):
             return jsonify({"success": False, "message": "mobile is already exist"})
         user = User(mobile, password1)
         user.save()

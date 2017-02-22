@@ -11,7 +11,6 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
 
-
 var ap = new Vue({
     el: '#app',
     data: {

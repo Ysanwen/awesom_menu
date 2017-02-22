@@ -1,29 +1,34 @@
 <template>  
   <el-col :span="4" class="left-nav-col">
-    <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+    <el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :router="useRouter">
       <el-submenu index="1">
-        <template slot="title"><i class="el-icon-message"></i>导航一</template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
+        <template slot="title"><i class="el-icon-menu"></i>菜单管理</template>
+          <el-menu-item index="1-1" :route='allMenu'>全部菜单</el-menu-item>
+          <el-menu-item index="1-2" :route='addMenu'>新增菜单</el-menu-item>
       </el-submenu>
-      <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
-      <el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
+      <el-submenu index="2">
+        <template slot="title"><i class="el-icon-menu"></i>订单管理</template>
+          <el-menu-item index="2-1">进行中订单</el-menu-item>
+          <el-menu-item index="2-2">已完成订单</el-menu-item>
+      </el-submenu>
+      <el-submenu index="3">
+        <template slot="title"><i class="el-icon-menu"></i>其他</template>
+          <el-menu-item index="3-1">其他一</el-menu-item>
+          <el-menu-item index="3-2">其他二</el-menu-item>
+      </el-submenu>
     </el-menu>
   </el-col>
 </template>
 
 <script>
    export default {
+    data:function () {
+      return{
+        useRouter:true,
+        allMenu:{path:'/allMenu'},
+        addMenu:{path:'/addMenu'}
+      }
+    },
     methods: {
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
