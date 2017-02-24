@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Row,Col,Menu,SubMenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu} from 'element-ui'
+import { Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu} from 'element-ui'
 import { Message } from 'element-ui'
 import './admin_panel.less'
 import LeftNav from './components/LeftNav.vue'
 import ApiRequest from './common/ApiRequest.js'
+import AddMenu from './components/AddMenu.vue'
 
-let import_list = [Row,Col,Menu,SubMenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu]
+let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu]
 for (let item in import_list){
     Vue.use(import_list[item])
 } 
@@ -15,12 +16,12 @@ Vue.use(VueRouter);
 
 
 const Foo = { template: '<div>allMenu</div>' };
-const Bar = { template: '<div>addMenu</div>' };
+// const Bar = { template: '<div>addMenu</div>' };
 
 const router = new VueRouter({
   routes:[
       { path: '/allMenu', component: Foo },
-      { path: '/addMenu', component: Bar }
+      { path: '/addMenu', component: AddMenu }
   ] 
 });
 
@@ -37,7 +38,7 @@ let ap = new Vue({
     
     },
     components:{
-        LeftNav
+        LeftNav,AddMenu
     },
     methods:{
         showDropDown:function(){

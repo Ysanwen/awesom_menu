@@ -39,13 +39,21 @@ module.exports = {
             alert('parsing failed', ex)
         })
     },
-    ajUploadFile:function(api_suffix,file_array,callback_function){
+    ajUploadFile:function(api_suffix,files_object,callback_function){
+        
+        let file_array = files_object.files ? files_object.files : [];
+        let data_dict = files_object.data ? files_object.data:{};
         let data = new FormData();
-        for(let item in file_array){
-            data.append('file',file_array[item])
+        for (let item in file_array){
+        
+            data.append('files'+item.toString(),file_array[item])
+        }
+        for (let key in data_dict){
+            data.append(key,data_dict[key])
         }
         fetch(base_url+api_suffix,{
             method:"POST",
+            credentials:'same-origin',
             body:data
         }).then((response)=>{
             return response.json()

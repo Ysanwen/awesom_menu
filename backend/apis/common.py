@@ -31,7 +31,7 @@ class ApiAction(Resource):
         return arguments
 
     def is_done(self, data):
-        if isinstance(data, dict) or isinstance(data, str) or isinstance(data, list):
+        if isinstance(data, dict) or isinstance(data, str) or isinstance(data, list) or isinstance(data, bool):
             return jsonify({'success': True, 'data': data})
         else:
             raise Exception("data type error!")

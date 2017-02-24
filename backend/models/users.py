@@ -26,7 +26,7 @@ class User(BaseModel):
         self.id = id
         self.username = username
         self.password = generate_password_hash(password)
-        self.mobile = str(mobile)
+        self.mobile = mobile
         self.create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.isActive = True
 

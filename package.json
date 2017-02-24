@@ -12,7 +12,7 @@
     "babel-runtime": "^6.20.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
-    "element-ui": "^1.1.6",
+    "element-ui": "^1.2.0",
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.4",
     "html-webpack-harddisk-plugin": "0.0.2",
@@ -37,7 +37,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack-dev-server --config ./frondend/webpack/webpack.config.js -d --hot --progress",
+    "dev": "./node_modules/.bin/webpack-dev-server --config ./frondend/webpack/webpack.config.js -d --hot --line --progress",
     "build": " NODE_ENV=production ./node_modules/.bin/webpack --config ./frondend/webpack/webpack.config.js --colors --progress"
   },
   "keywords": [

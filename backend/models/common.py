@@ -90,7 +90,7 @@ class BaseModel(dict):
     @classmethod
     def insert_one(cls, data_dict):
         result = cls.get_table().insert_ignore(data_dict, ['id'])
-        return data_dict['id'] if result else False
+        return True if result else False
 
     @classmethod
     def insert_many(cls, data_source_list):
