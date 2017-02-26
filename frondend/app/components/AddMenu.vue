@@ -13,21 +13,28 @@
         <input type="file" @change="handleChange" name="upload" class="upload-button" ref="input"/>
       </div>
       <br/>
-      <el-form label-width="80px" :model="addMenuForm" ref="addMenuForm">
-        <el-form-item label="菜名">
-          <el-input v-model="addMenuForm.name"></el-input>
+      <el-form label-width="80px" :model="addMenuForm" ref="addMenuForm" :rules="validateRules">
+        <el-form-item label="菜名" prop="name">
+          <el-input v-model="addMenuForm.name" placeholder="菜品名称"></el-input>
         </el-form-item>
-        <el-form-item label="类别">
-          <el-input v-model="addMenuForm.type"></el-input>
+        <el-form-item label="类别" prop="type">
+          <el-input v-model="addMenuForm.type" placeholder="主食、小炒、酒水、饮料等"></el-input>
         </el-form-item>
-        <el-form-item label="单位">
-          <el-input v-model="addMenuForm.unit"></el-input>
+        <el-form-item label="单位" prop="unit">
+          <el-input v-model="addMenuForm.unit" placeholder="份、杯"></el-input>
         </el-form-item>
-        <el-form-item label="单价">
-          <el-input v-model="addMenuForm.price"></el-input>
+        <el-form-item label="单价" prop="price">
+          <el-input v-model.number="addMenuForm.price" placeholder="每份的价格"></el-input>
         </el-form-item>
-        <el-form-item label="数量">
-          <el-input v-model="addMenuForm.quantity"></el-input>
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model.number="addMenuForm.quantity" placeholder="每日供应数量"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="addMenuForm.status" placeholder="请选择是否上架">
+            <el-option label="立即上架" value="0"></el-option>
+            <el-option label="暂不上架" value="1"></el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item>
@@ -41,11 +48,11 @@
 
 <script>
   import Vue from 'vue'
-  import { Form,Input,FormItem,Button,Upload,Dialog } from 'element-ui'
-  import 'element-ui/lib/theme-default/upload.css'
+  import { Form,Input,FormItem,Button,Upload,Dialog,Select,Option } from 'element-ui'
+  import { Message } from 'element-ui'
   import ApiRequest from '../common/ApiRequest.js'
 
-  let importList = [Form,Input,FormItem,Button,Upload,Dialog];
+  let importList = [Form,Input,FormItem,Button,Upload,Dialog,Select,Option];
   for (let item in importList){
     Vue.use(importList[item])
   }
@@ -61,7 +68,16 @@
           type:'',
           unit:'',
           price:'',
-          quantity:''
+          quantity:'',
+          status:'0'
+        },
+        validateRules:{
+          name:[{required:true}],
+          type:[{required:true}],
+          unit:[{required:true}],
+          price:[{required:true}],
+          quantity:[{required:true}],
+          status:[{required:true}]
         }
       }
     },
@@ -91,17 +107,26 @@
           };
 
           that.upload_file_list.push(picture_file);
+        }else {
+          Message.alert('no picture selected');
         }
       },
       submitForm:function (form) {
+
         let data = {};
         for(let key in this.addMenuForm){
           data[key] = this.addMenuForm[key]
         }
         let files = this.upload_file_list;
-        console.log(data,files);
+        let that = this;
         ApiRequest.ajUploadFile('upload/upload_file',{data:data,files:files},(json)=>{
-          console.log(json);
+          
+          that.$refs['addMenuForm'].resetFields();
+          for(let item in that.upload_file_list){
+            that.handleRemovePicture(item);
+          }
+          that.upload_file_list = [];
+          Message.success('创建成功！');
         })
       }
     }

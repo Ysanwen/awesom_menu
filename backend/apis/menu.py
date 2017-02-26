@@ -4,6 +4,7 @@ from flask_login import current_user
 import pickle
 from backend.models import Menu
 
+
 class MenuApi(ApiAction):
     """
     get all the menu of current user
@@ -15,4 +16,6 @@ class MenuApi(ApiAction):
         if result:
             for item in result:
                 item['url_address'] = pickle.loads(item['url_address'])
+                item['status'] = "热销中" if item['status'] == Menu.ONSELL else "未上架"
+                item['monthly_sales'] = item['monthly_sales'] if item['monthly_sales'] else 0
         return self.is_done(result)

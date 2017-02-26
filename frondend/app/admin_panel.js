@@ -6,6 +6,7 @@ import './admin_panel.less'
 import LeftNav from './components/LeftNav.vue'
 import ApiRequest from './common/ApiRequest.js'
 import AddMenu from './components/AddMenu.vue'
+import AllMenu from './components/AllMenu.vue'
 
 let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu]
 for (let item in import_list){
@@ -14,13 +15,11 @@ for (let item in import_list){
 
 Vue.use(VueRouter);
 
-
-const Foo = { template: '<div>allMenu</div>' };
 // const Bar = { template: '<div>addMenu</div>' };
 
 const router = new VueRouter({
   routes:[
-      { path: '/allMenu', component: Foo },
+      { path: '/allMenu', component: AllMenu },
       { path: '/addMenu', component: AddMenu }
   ] 
 });

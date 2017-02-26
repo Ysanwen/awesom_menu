@@ -9,6 +9,7 @@ from datetime import datetime
 class Menu(BaseModel):
     ONSELL = 0
     OFFSELL = 1
+    MonthlySales = 0
     __column_fileds__ = {
         'uid': sqlalchemy.String,
         'name': sqlalchemy.String(50),
@@ -16,9 +17,10 @@ class Menu(BaseModel):
         'unit': sqlalchemy.String,
         'price': sqlalchemy.Float,
         'quantity': sqlalchemy.Integer,
+        'monthly_sales': sqlalchemy.Integer,
         'url_address': sqlalchemy.PickleType,
         'status': sqlalchemy.Integer,
-        'create_time': sqlalchemy.String
+        'create_time': sqlalchemy.DateTime
     }
 
     def __init__(self, **kwargs):
@@ -28,6 +30,7 @@ class Menu(BaseModel):
         self.unit = kwargs.get('unit', None)
         self.price = kwargs.get('price', None)
         self.quantity = kwargs.get('quantity', None)
+        self.monthly_sales = Menu.MonthlySales
         self.url_address = kwargs.get('url_address', None)
-        self.status = Menu.ONSELL
-        self.create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.status = kwargs.get('status', None) if kwargs.get('status', None) else Menu.ONSELL
+        self.create_time = datetime.now()

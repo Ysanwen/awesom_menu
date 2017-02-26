@@ -17,7 +17,7 @@ class User(BaseModel):
         'username': sqlalchemy.String(50),
         'password': sqlalchemy.String,
         'mobile': sqlalchemy.BigInteger,
-        'create_time': sqlalchemy.String,
+        'create_time': sqlalchemy.DateTime,
         'isActive': sqlalchemy.Boolean
     }
 
@@ -27,7 +27,7 @@ class User(BaseModel):
         self.username = username
         self.password = generate_password_hash(password)
         self.mobile = mobile
-        self.create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.create_time = datetime.now()
         self.isActive = True
 
     @staticmethod

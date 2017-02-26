@@ -19,7 +19,8 @@ class UploadFileApi(ApiAction):
         Argument('unit', str, required=True),
         Argument('type', str, required=True),
         Argument('price', float, required=True),
-        Argument('quantity', int, required=True))
+        Argument('quantity', int, required=True),
+        Argument('status', int, required=True))
     def upload_file(self, arguments):
         file_dict = request.files.to_dict()
         if not file_dict:
