@@ -7,6 +7,7 @@ import LeftNav from './components/LeftNav.vue'
 import ApiRequest from './common/ApiRequest.js'
 import AddMenu from './components/AddMenu.vue'
 import AllMenu from './components/AllMenu.vue'
+import QrcodeMenu from './components/QrcodeMenu.vue'
 
 let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu]
 for (let item in import_list){
@@ -19,8 +20,10 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes:[
+      { path:'/', component: AllMenu},
       { path: '/allMenu', component: AllMenu },
-      { path: '/addMenu', component: AddMenu }
+      { path: '/addMenu', component: AddMenu },
+      { path:'/qrcodeMenu',component:QrcodeMenu}
   ] 
 });
 

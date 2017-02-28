@@ -5,6 +5,7 @@
         <template slot="title"><i class="el-icon-menu"></i>菜单管理</template>
           <el-menu-item index="1-1" :route='allMenu'>全部菜单</el-menu-item>
           <el-menu-item index="1-2" :route='addMenu'>新增菜单</el-menu-item>
+          <el-menu-item index="1-3" :route='qrcodeMenu'>二维码菜单</el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title"><i class="el-icon-menu"></i>订单管理</template>
@@ -26,7 +27,8 @@
       return{
         useRouter:true,
         allMenu:{path:'/allMenu'},
-        addMenu:{path:'/addMenu'}
+        addMenu:{path:'/addMenu'},
+        qrcodeMenu:{path:'/qrcodeMenu'}
       }
     },
     methods: {

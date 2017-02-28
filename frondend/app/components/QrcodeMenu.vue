@@ -1,23 +1,14 @@
 <template>
   <el-col :span="20">
+    <div class="create-qrcode">
+      <el-input v-model="inputNumber" placeholder="请输入生成二维码数量" class="input-number"></el-input>
+      <el-button type="primary" class="create-qrcode-button" @click="createQrcode">确定生成</el-button>
+    </div>
     <el-card class="card-content" :body-style="{ padding: '0px' }" v-for="item in menuData">
       <img :src="'/static/upload/'+item['url_address'][0]" class="image">
       <div class="content-text">
-          <div>
-            <span style="font-weight:700">{{item['name']}}</span>
-            <span class="text-right">{{item['type']}}</span>
-          </div>  
-          <div>  
-            <span style="color:red">{{item['price']}} 元/{{item['unit']}}</span>
-            <span style="float:right">总共：{{item['quantity']}}份</span>
-          </div>
-          <div>
-            <span>月销：{{item['monthly_sales']}}份</span>
-            <span style="float:right">{{item['status']}}</span>
-          </div>
-          <div>  
-            <el-button type="text" class="button" @click="modifyMenu(item)">更多操作</el-button>
-          </div>
+          <el-input v-model="inputName" placeholder="请输入内容" class="input-name"></el-input>
+          <el-button type="primary">修改</el-button>
       </div>
     </el-card>
   </el-col>
@@ -25,15 +16,19 @@
 
 <script>
     import Vue from 'vue'
-    import { Card,Message, Loading} from 'element-ui'
+    import { Card,Message,Loading,Input,Button} from 'element-ui'
     import ApiRequest from '../common/ApiRequest.js'
 
     Vue.use(Card);
+    Vue.use(Input);
+    Vue.use(Button);
     
     export default {
       data:function() {
         return {
           menuData:[],
+          inputNumber:"",
+          inputName:""
         }
       },
       created:function(){
@@ -50,8 +45,10 @@
         })
       },
       methods:{
-        modifyMenu:function(itemData){
-            console.log(itemData)
+        createQrcode:function(){
+          let create_num = this.inputNumber;
+          console.log(create_num);
+          // TODO: add created qrcode function
         }
       }
     }
@@ -59,8 +56,8 @@
 
 <style scoped>
 .card-content {
-    width: 200px;
-    min-height: 220px;
+    width: 12.5rem;
+    height: 15.5rem;
     font-size: 14px;
     margin-left: 5px;
     margin-top: 5px;
@@ -71,25 +68,30 @@
     overflow: hidden;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04)
 }
+.create-qrcode{
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+.input-number{
+  display: inline-block;
+  width: 12rem;
+}
+.create-qrcode-button{
+  display: inline-block;
+}
+
 
 .content-text {
-    padding: 10px;
+  height: 3rem; 
+  padding: 10px;
 }
-
-.text-right {
-    float: right;
-    color: #999
+.input-name{
+  width: 7rem;
 }
-
-.button {
-    padding: 0;
-    float: right;
-}
-
 .image {
-    width: 100%;
-    height: 150px;
-    display: block;
+  width: 12.5rem;
+  height: 12.5rem;
+  display: block;
 }
 
 </style>

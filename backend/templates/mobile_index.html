@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
+  <title>Awesome Menu</title>
+</head>
+<body>
+  <div id="mobile">
+    <div id="header">
+      <mt-header fixed title="Awesome Menu Platform" id="header-area"></mt-header>
+    </div>
+    <div id="content">
+      <div class="header-picture" id="header-picture">
+        <mt-swipe :auto="3000">
+          <mt-swipe-item><img src="/static/upload/644887a8-fc34-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
+          <mt-swipe-item><img src="/static/upload/a43d3252-fc28-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
+        </mt-swipe>
+      </div>
+      <div class="left-nav" id="left-nav" :style="navStyle">
+        <div v-for="item in menuList" class="nav-item">
+          {{ item }}
+        </div>
+      </div>
+      <div class="right-content">
+          <div v-for="con in 10" class="inner-content">
+            <div class="food-img"><img src="/static/upload/644887a8-fc34-11e6-879d-207c8f791ecf.jpg"></div>
+            <div class="food-content">
+              <p class="food-title">{{ foodList[0].name }}</p>
+              <p class="food-type">分类：{{ foodList[0].type }}</p>
+              <p class="food-quantity">今日供应：{{ foodList[0].quantity }}，月销量：3000</p>
+              <p class="food-price">¥{{ foodList[0].price }}</p>
+            </div>
+            <div class="button"></div>
+          </div>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="footer-left">
+        <span class="has-choosed">已选0件</span>
+        <span>总价0元</span>
+      </div>
+      <div class="footer-right">
+        待选择
+      </div>
+    </div>
+  </div>
+  <script src="http://192.168.31.199:8080/build/mobile_index.js"></script>
+
+</body>
+</html>

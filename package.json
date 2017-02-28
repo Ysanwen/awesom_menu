@@ -19,6 +19,7 @@
     "html-webpack-plugin": "^2.28.0",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
+    "mint-ui": "^2.1.1",
     "style-loader": "^0.13.1",
     "transfer-webpack-plugin": "^0.1.4",
     "url-loader": "^0.5.7",
@@ -37,7 +38,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack-dev-server --config ./frondend/webpack/webpack.config.js -d --hot --line --progress",
+    "dev": "./node_modules/.bin/webpack-dev-server --config ./frondend/webpack/webpack.config.js -d --hot --progress",
     "build": " NODE_ENV=production ./node_modules/.bin/webpack --config ./frondend/webpack/webpack.config.js --colors --progress"
   },
   "keywords": [

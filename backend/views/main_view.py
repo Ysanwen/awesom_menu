@@ -14,10 +14,15 @@ def index():
     return render_template('index.html')
 
 
-@ view_bp.route('admin_panel')
+@view_bp.route('admin_panel')
 @login_required
 def admin_panle():
     return render_template('admin_panel.html')
+
+
+@view_bp.route('mobile_index')
+def mobile_index():
+    return render_template('mobile_index.html')
 
 
 @view_bp.route('api/sign_in', methods=['POST'])

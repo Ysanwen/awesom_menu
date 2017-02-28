@@ -10,13 +10,15 @@ var mode = process.env.NODE_ENV;
 if (mode === 'production') {
     baseUrl = "/static/"
 } else {
-    baseUrl = "http://localhost:8080/";
+    // baseUrl = "http://localhost:8080/";
+    baseUrl = "http://192.168.31.199:8080/";
 }
 
 module.exports = {
     entry: {
       main:path.resolve(__dirname, '../app/main.js'),
-      admin_panel:path.resolve(__dirname, '../app/admin_panel.js')
+      admin_panel:path.resolve(__dirname, '../app/admin_panel.js'),
+      mobile_index:path.resolve(__dirname,'../mobile/mobile_index.js')
     },
     output: {
         path: path.resolve(__dirname, '../build'),
@@ -47,6 +49,13 @@ module.exports = {
         filename: path.resolve(__dirname, '../../backend/templates/admin_panel.html'),
         inject: false,
         jspath:baseUrl+'build/admin_panel.js'
+      }),
+      new HtmlWebpackPlugin({
+        alwaysWriteToDisk: true,
+        template: './frondend/mobile/mobile_index.html',
+        filename: path.resolve(__dirname, '../../backend/templates/mobile_index.html'),
+        inject: false,
+        jspath:baseUrl+'build/mobile_index.js'
       }),
       new CopyWebpackPlugin(
         [{from:path.resolve(__dirname, '../build'),to:path.resolve(__dirname, '../../backend/static')}]
@@ -83,11 +92,12 @@ module.exports = {
       }]
     },
     babel: {
-     presets: ['es2015','stage-0'],
+     presets: ["es2015",'stage-0'],
      plugins: ['transform-runtime',["component", [
       {
         "libraryName": "element-ui",
-        "styleLibraryName": "theme-default"
+        "styleLibraryName": "theme-default",
+        "style": true
       }]]]
     },
 
@@ -99,6 +109,7 @@ module.exports = {
       inline: true,
       hot: true,
       debug: true,
+      host:"0.0.0.0",
       headers: { "Access-Control-Allow-Origin": "*" }
   }
 };
