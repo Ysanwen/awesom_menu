@@ -4,12 +4,9 @@
       <el-input v-model="inputNumber" placeholder="请输入生成二维码数量" class="input-number"></el-input>
       <el-button type="primary" class="create-qrcode-button" @click="createQrcode">确定生成</el-button>
     </div>
-    <el-card class="card-content" :body-style="{ padding: '0px' }" v-for="item in menuData">
-      <img :src="'/static/upload/'+item['url_address'][0]" class="image">
-      <div class="content-text">
-          <el-input v-model="inputName" placeholder="请输入内容" class="input-name"></el-input>
-          <el-button type="primary">修改</el-button>
-      </div>
+    <el-card class="card-content" :body-style="{ padding: '0px' }" v-for="(item,index) in qrcodeData">
+      <img :src="'/static/qrcode/'+item['url_address']" class="image">
+      <qrcode-modify :item_dict="item"></qrcode-modify>
     </el-card>
   </el-col>
 </template>
@@ -17,6 +14,7 @@
 <script>
     import Vue from 'vue'
     import { Card,Message,Loading,Input,Button} from 'element-ui'
+    import QrcodeModify from './QrcodeModify.vue'
     import ApiRequest from '../common/ApiRequest.js'
 
     Vue.use(Card);
@@ -26,29 +24,42 @@
     export default {
       data:function() {
         return {
-          menuData:[],
+          qrcodeData:[],
           inputNumber:"",
-          inputName:""
+          
         }
+      },
+      components:{
+        QrcodeModify
       },
       created:function(){
         let that = this;
         let loadingInstance = Loading.service({text:'加载中......'});
-        ApiRequest.ajGet('menu/get_all_menus',(json)=>{
+        ApiRequest.ajGet('qrcode/get_all_qrcodes',(json)=>{
             if(json.success){
-                that.menuData = json.data;
+                that.qrcodeData = json.data;
                 loadingInstance.close();
             }else{
                 loadingInstance.close();
-                Message.error(json.message);
+                Message.error({message:json.message,showClose:true});
             }
         })
       },
       methods:{
         createQrcode:function(){
-          let create_num = this.inputNumber;
-          console.log(create_num);
+          let that = this;
+          let loadingInstance = Loading.service({text:'加载中......'});
+          let create_num = parseInt(this.inputNumber);
           // TODO: add created qrcode function
+          ApiRequest.ajGet('qrcode/create_qrcode?create_quantity='+create_num,(json)=>{
+            if(json.success){
+              that.qrcodeData = json.data;
+              loadingInstance.close();
+            }else{
+              loadingInstance.close();
+              Message.error({message:json.message,showClose:true});
+            }
+          })
         }
       }
     }
@@ -78,15 +89,6 @@
 }
 .create-qrcode-button{
   display: inline-block;
-}
-
-
-.content-text {
-  height: 3rem; 
-  padding: 10px;
-}
-.input-name{
-  width: 7rem;
 }
 .image {
   width: 12.5rem;

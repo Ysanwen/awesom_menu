@@ -17,5 +17,8 @@ SECRET_KEY = '\x88\xaf\x90e\xc6D\xf5\xa5\x17\xcf\xd0Hc\x00!\xbfh\xc3\x06\xd2#\xe
 
 APP_NAME = 'awesome'
 
+#server address
+SERVER_HOST = '192.168.31.199:5000'
+
 # for jsonify deal with chinese
 JSON_AS_ASCII = False

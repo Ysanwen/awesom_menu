@@ -3,7 +3,7 @@
 from flask import jsonify, request
 from functools import wraps
 from flask_restful import Resource
-
+import json
 
 class ApiAction(Resource):
     """
@@ -28,6 +28,8 @@ class ApiAction(Resource):
         arguments.update(request.args.to_dict())
         arguments.update(request.form.to_dict())
         arguments.update(request.files.to_dict())
+        if request.data:
+            arguments.update(json.loads(request.data))
         return arguments
 
     def is_done(self, data):
