@@ -72,7 +72,9 @@ class BaseModel(dict):
         kwargs.update({'_limit': _limit, '_offset': _offset, '_step': _step})
         result = cls.get_table().find(*args, **kwargs)
         if return_count:
-            return result
+            total = cls.get_table.count(*args, **kwargs)
+            result = [dict(item) for item in result]
+            return result.append({'total': total})
         else:
             if result:
                 return [dict(item) for item in result]

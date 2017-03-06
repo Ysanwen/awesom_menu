@@ -17,22 +17,31 @@
           <mt-swipe-item><img src="/static/upload/a43d3252-fc28-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
         </mt-swipe>
       </div>
-      <div class="left-nav" id="left-nav" :style="navStyle">
-        <div v-for="item in menuList" class="nav-item">
-          {{ item }}
-        </div>
-      </div>
-      <div class="right-content">
-          <div v-for="con in 10" class="inner-content">
-            <div class="food-img"><img src="/static/upload/644887a8-fc34-11e6-879d-207c8f791ecf.jpg"></div>
-            <div class="food-content">
-              <p class="food-title">{{ foodList[0].name }}</p>
-              <p class="food-type">分类：{{ foodList[0].type }}</p>
-              <p class="food-quantity">今日供应：{{ foodList[0].quantity }}，月销量：3000</p>
-              <p class="food-price">¥{{ foodList[0].price }}</p>
-            </div>
-            <div class="button"></div>
+      <div class="contnet-body">
+        <div class="left-nav" id="left-nav">
+          <div v-for="item in menuList" class="nav-item">
+            <a :href='"#item"+ menuList.indexOf(item)'>{{ item }}</a>
           </div>
+        </div>
+        <div class="right-content">
+            <div v-for='menu_item in menuList'>
+              <a class="right-content-header" :name='"item"+menuList.indexOf(menu_item)'>{{ menu_item }}</a>
+              <div v-for="con in dataSource[menu_item]" class="inner-content">
+                <div class="food-img"><img src="/static/upload/644887a8-fc34-11e6-879d-207c8f791ecf.jpg"></div>
+                <div class="food-content">
+                  <p class="food-title">{{ con.name }}</p>
+                  <p class="food-type">分类：{{ con.type }}</p>
+                  <p class="food-quantity">今日供应：{{ con.quantity }}<br/>月销量：3000</p>
+                  <div class="food-bottom">
+                  <p class="food-price">¥{{ con.price }}</p>
+                  <i class="material-icons remove-icon">remove_circle</i>
+                  <span class="order-number">0</span>
+                  <i class="material-icons add-icon">add_circle</i>
+                  </div>
+                </div>
+              </div>
+            </div> 
+        </div>
       </div>
     </div>
     <div id="footer">

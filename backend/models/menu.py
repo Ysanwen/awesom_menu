@@ -3,6 +3,7 @@
 from .common import BaseModel
 import sqlalchemy
 from datetime import datetime
+import pickle
 
 
 @BaseModel.register_table(primary_id='id', primary_type='Integer')
@@ -34,3 +35,24 @@ class Menu(BaseModel):
         self.url_address = kwargs.get('url_address', None)
         self.status = kwargs.get('status', None) if kwargs.get('status', None) else Menu.ONSELL
         self.create_time = datetime.now()
+
+
+@BaseModel.register_table(primary_id='id', primary_type='Integer')
+class Category(BaseModel):
+    """docstring for MenuItemType"""
+    __column_fileds__ = {
+        'uid': sqlalchemy.String,
+        'category': sqlalchemy.PickleType,
+    }
+
+    def __init__(self, **kwargs):
+        self.uid = kwargs.get('uid', None)
+        self.category = kwargs.get('category', None)
+
+    @classmethod
+    def get_categories(cls, uid):
+        result = cls.find_one(uid=uid)
+        if result:
+            return pickle.loads(result['category'])
+        else:
+            return []

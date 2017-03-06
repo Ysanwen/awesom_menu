@@ -18,6 +18,7 @@ api.add_resource(TestApi, "/test", "/test/<string:action>")
 api.add_resource(UserApi, "/user", "/user/<string:action>")
 api.add_resource(UploadFileApi, "/upload", "/upload/<string:action>")
 api.add_resource(MenuApi, "/menu", "/menu/<string:action>")
+api.add_resource(CategoryApi, "category", "/category/<string:action>")
 api.add_resource(QrcodeMenuApi, "/qrcode", "/qrcode/<string:action>")
 
 app.register_blueprint(api_bp)

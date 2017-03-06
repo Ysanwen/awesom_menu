@@ -5,7 +5,7 @@ from flask import request
 import os
 import uuid
 import pickle
-from backend.models import Menu
+from backend.models import Menu, Category
 
 
 class UploadFileApi(ApiAction):
@@ -40,4 +40,11 @@ class UploadFileApi(ApiAction):
         arguments.update({'uid': uid, 'url_address': pickle.dumps(url_list)})
         new_menu = Menu(**arguments)
         result = new_menu.save()
+
+        # check whether there is a new type
+        menu_type = arguments['type']
+        category_list = Category.get_categories('uid')
+        if menu_type not in category_list:
+            category_list.append(menu_type)
+            Category.update({'uid': uid, 'category': pickle.dumps(category_list)}, ['uid'])
         return self.is_done(result)
