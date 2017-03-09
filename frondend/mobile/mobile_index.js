@@ -4,6 +4,7 @@ import 'mint-ui/lib/style.css'
 import './mobile_index.less'
 import ApiRequest from '../app/common/ApiRequest.js'
 import 'material-design-icons/iconfont/material-icons.css'
+import ShowMenuItem from './components/ShowMenuItem.vue'
 
 import Lodash from 'lodash'
 
@@ -14,13 +15,46 @@ var mobile_app = new Vue({
     el:'#mobile',
     data:function(){
         return{
-            menuList:['菜单一','菜单二','菜单三','菜单四','菜单五'],
+            menuList:[],
             dataSource:[],
             loading:false,
+            selectedItemList:[],
+            selectedItemQuantity:[],
+            totalSelect:0,
+            totalPrice:0.00,
+            hasSelect:{backgroundColor:'#26ffa5'},
+            noSelect:{backgroundColor:'#cccccc'}
         }
     },
+    components:{
+        ShowMenuItem
+    },
     methods:{
-        
+        reduceOfItem:function(item,quantity){
+            let item_index = this.selectedItemList.indexOf(item);
+
+            if(quantity == 0){
+                this.selectedItemList.splice(item_index,1);
+                this.selectedItemQuantity.splice(item_index,1);
+            }else{
+
+                this.selectedItemQuantity[item_index] = quantity;
+            }
+            this.totalSelect -= 1;
+            this.totalPrice -= item['price']*quantity
+            
+        },
+        addOfItem:function(item,quantity){
+            let item_index = this.selectedItemList.indexOf(item);
+            if(item_index<0){
+                this.selectedItemList.push(item);
+                this.selectedItemQuantity.push(quantity);
+            }else {
+                this.selectedItemQuantity[item_index] = quantity;
+            }
+            this.totalSelect += 1;
+            this.totalPrice += item['price']*quantity
+        }
     },
     created:function(){
         let getQueryVariable = function(variable){
