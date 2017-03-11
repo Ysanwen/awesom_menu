@@ -90,8 +90,8 @@ class BaseModel(dict):
             return None
 
     @classmethod
-    def insert_one(cls, data_dict):
-        result = cls.get_table().insert_ignore(data_dict, ['id'])
+    def insert_one(cls, data_dict, keys_list):
+        result = cls.get_table().insert_ignore(data_dict, keys_list)
         return True if result else False
 
     @classmethod
@@ -102,11 +102,11 @@ class BaseModel(dict):
     def update(cls, data_dict, match_keys_list):
         return cls.get_table().update(data_dict, match_keys_list)
 
-    def save(self):
+    def save(self, keys_list=['id']):
         new_row = dict()
         for key in self.__column_fileds__:
             if getattr(self, key, None) is None:
                 raise Exception('the name of {} is not defined!'.format(key))
             else:
                 new_row.update({key: getattr(self, key)})
-        return self.insert_one(new_row)
+        return self.insert_one(new_row, keys_list)

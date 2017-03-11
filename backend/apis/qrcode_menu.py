@@ -28,7 +28,7 @@ class QrcodeMenuApi(ApiAction):
                 version=2,
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                 box_size=10, border=1)
-            qrcode_link_to = base_server_host + '/mobile_index?id=' + uid + '&table_id=' + table_id
+            qrcode_link_to = base_server_host + '/mobile_index?uid=' + uid + '&table_id=' + table_id
             qr.add_data(qrcode_link_to)
             qr.make(fit=True)
             qr_img = qr.make_image()

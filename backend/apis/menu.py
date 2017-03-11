@@ -2,7 +2,7 @@
 from .common import ApiAction, request_method_check, Argument, parse_arguments
 from flask_login import current_user
 import pickle
-from backend.models import Menu, Category
+from backend.models import Menu, Category, QrcodeMenu
 
 
 class MenuApi(ApiAction):
@@ -26,9 +26,12 @@ class MenuApi(ApiAction):
 class CategoryApi(ApiAction):
     """docstring for CategoryApi"""
     @request_method_check(['GET'])
-    @parse_arguments(Argument('uid', str, required=True))
+    @parse_arguments(
+        Argument('uid', str, required=True),
+        Argument('table_id', str, required=True))
     def get_categories_menu(self, arguments):
         uid = arguments['uid']
+        table_id = arguments['table_id']
         category_list = Category.get_categories(uid)
         # if no category,create it
         if not category_list:
@@ -54,6 +57,9 @@ class CategoryApi(ApiAction):
         else:
             result = {'category': category_list, 'menus': menu_list}
 
+        # add table info
+        table_info = QrcodeMenu.find_one(table_id=table_id, uid=uid)
+        result['table'] = table_info
         # if category has changed,need to update
         if len(category_list) != before_ca_len:
             Category.update({'uid': uid, 'category': pickle.dumps(category_list)}, ['uid'])

@@ -5,49 +5,11 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
   <title>Awesome Menu</title>
 </head>
-<body>
+<body style="margin: 0px">
   <div id="mobile">
-    <div id="header">
-      <mt-header fixed title="Awesome Menu Platform" id="header-area"></mt-header>
-    </div>
-    <div id="content">
-      <div class="header-picture" id="header-picture">
-        <mt-swipe :auto="3000">
-          <mt-swipe-item><img src="/static/upload/644887a8-fc34-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
-          <mt-swipe-item><img src="/static/upload/a43d3252-fc28-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
-        </mt-swipe>
-      </div>
-      <div class="content-body">
-        <div class="left-nav" id="left-nav">
-          <div v-for="item in menuList" class="nav-item">
-            <a :href='"#item"+ menuList.indexOf(item)'>{{ item }}</a>
-          </div>
-        </div>
-        <div class="right-content">
-            <div v-for='menu_item in menuList'>
-              <a class="right-content-header" :name='"item"+menuList.indexOf(menu_item)'>{{ menu_item }}</a>
-              <div v-for="con in dataSource[menu_item]" class="inner-content" >
-                <!-- add menu item conponent -->
-                <show-menu-item :item="con" 
-                  v-on:add="addOfItem" v-on:reduce="reduceOfItem"></show-menu-item>
-              </div>
-            </div> 
-        </div>
-      </div>
-    </div>
-    <div id="footer">
-      <div class="footer-left" :style="totalSelect > 0 ? hasSelect:noSelect">
-        <span class="has-choosed">已选{{ totalSelect }}份</span>
-        <span>总价{{ totalPrice.toFixed(2) }}元</span>
-      </div>
-      <div class="footer-right" v-if="totalSelect>0">
-        {{ '查看已点'}}
-      </div>
-      <div class="footer-right" v-else>
-        {{'待点单'}}
-      </div>
-    </div>
-  </div>
+    <mobile-index v-if="showTag=='index'"></mobile-index>
+    <order v-if="showTag=='order'"></order>
+  </div> 
   <script src="<%= htmlWebpackPlugin.options.jspath %>"></script>
 
 </body>

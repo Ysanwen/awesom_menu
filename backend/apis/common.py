@@ -5,6 +5,7 @@ from functools import wraps
 from flask_restful import Resource
 import json
 
+
 class ApiAction(Resource):
     """
     rewrite the dispatch_request to deal with api request,
@@ -100,11 +101,20 @@ def parse_arguments(*ars):
             arguments = args[1]
             argument_key = arguments.keys()
             for item in ars:
-                if item.required and item.name not in argument_key:
-                    if type(item.default) == item.text_type:
-                        new_arguments[item.name] = item.default
+                if item.required:
+                    if item.name in argument_key:
+                        if item.verify_argument(arguments[item.name]):
+                            new_arguments[item.name] = item.text_type(arguments[item.name])
+                        else:
+                            return jsonify({'param error': 'the type of {0} should be {1}'.format(item.name, item.text_type)})
                     else:
-                        return jsonify({'default param error': 'the type of {0} should be {1}'.format(item.default, item.text_type)})
+                        if item.default:
+                            if type(item.default) == item.text_type:
+                                new_arguments[item.name] = item.default
+                            else:
+                                return jsonify({'default param error': 'the type of {0} should be {1}'.format(item.name, item.text_type)})
+                        else:
+                            return jsonify({'param error': 'the type of {0} should be {1}'.format(item.name, item.text_type)})
                 else:
                     if item.name in argument_key:
                         if item.verify_argument(arguments[item.name]):

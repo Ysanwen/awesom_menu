@@ -16,6 +16,7 @@ if (mode === 'production') {
 
 module.exports = {
     entry: {
+
       main:path.resolve(__dirname, '../app/main.js'),
       admin_panel:path.resolve(__dirname, '../app/admin_panel.js'),
       mobile_index:path.resolve(__dirname,'../mobile/mobile_index.js')
@@ -35,6 +36,11 @@ module.exports = {
     devtool: 'eval-source-map',
     
     plugins: [
+      // new webpack.HotModuleReplacementPlugin(),
+      new webpack.ProvidePlugin({
+          'Promise': 'es6-promise', // Thanks Aaron (https://gist.github.com/Couto/b29676dd1ab8714a818f#gistcomment-1584602)
+          'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+      }),
       //把指定文件夹下的文件复制到指定的目录
       new HtmlWebpackPlugin({
         alwaysWriteToDisk: true,

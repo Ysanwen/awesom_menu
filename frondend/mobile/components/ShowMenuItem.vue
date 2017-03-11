@@ -16,23 +16,27 @@
 </template>
 
 <script>
+import 'mint-ui/lib/style.css'
     export default {
-        data:function () {
+        data:function(){
             return{
-                quantity:0
+                quantity:this.defaultQuantity
             }
         },
-        props:['item'],
+        props:['item','defaultQuantity'],
+        
         methods:{
             reduceQuantity:function(){
                 if(this.quantity>0){
                     this.quantity-=1;
-                    this.$emit('reduce',this.item,1);
+                    // call the action function defined in store.js
+                    this.$store.dispatch('reduceItem',this.item);
                 }
             },
             addQuantity:function(){
                 this.quantity+=1;
-                this.$emit('add',this.item,1);
+                // // call the action function defined in store.js
+                this.$store.dispatch('addItem',this.item);
             }
         }
     }   
