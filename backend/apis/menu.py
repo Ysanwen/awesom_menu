@@ -2,7 +2,7 @@
 from .common import ApiAction, request_method_check, Argument, parse_arguments
 from flask_login import current_user
 import pickle
-from backend.models import Menu, Category, QrcodeMenu
+from backend.models import Menu, Category, QrcodeMenu, Order
 
 
 class MenuApi(ApiAction):
@@ -60,6 +60,11 @@ class CategoryApi(ApiAction):
         # add table info
         table_info = QrcodeMenu.find_one(table_id=table_id, uid=uid)
         result['table'] = table_info
+
+        # add current_order_info
+        order_info = Order.get_current_order(table_id)
+        result['order_info'] = order_info
+
         # if category has changed,need to update
         if len(category_list) != before_ca_len:
             Category.update({'uid': uid, 'category': pickle.dumps(category_list)}, ['uid'])

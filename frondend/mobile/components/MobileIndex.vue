@@ -30,14 +30,14 @@
         </div>
         <div id="footer">
           <div class="footer-left" :style="totalSelectValue > 0 ? hasSelect:noSelect">
-            <span class="has-choosed">已选{{ totalSelectValue }}份</span>
+            <span class="has-choosed">当前已选{{ totalSelectValue }}份</span>
             <span>总价{{ totalPriceValue.toFixed(2) }}元</span>
           </div>
           <div class="footer-right" v-if="totalSelectValue>0" @click="goToOrder">
-            查看已点
+            查看已选
           </div>
-          <div class="footer-right" v-else>
-            待点单
+          <div class="footer-right" v-else @click="goToOrder">
+            {{ orderItemList.length>0 ? "查看已有订单":"待点单" }}
           </div>
         </div>
     </div>
@@ -60,25 +60,28 @@
         },
         computed:{
             menuList:function(){
-                return this.$store.state.menuList;
+              return this.$store.state.menuList;
             },
             dataSource:function(){
-                return this.$store.state.dataSource;
+              return this.$store.state.dataSource;
             },
             selectedItemList:function(){
-                return this.$store.state.selectedItemList;
+              return this.$store.state.selectedItemList;
             },
             selectedItemQuantity:function(){
-                return this.$store.state.selectedItemQuantity;
+              return this.$store.state.selectedItemQuantity;
               },
             totalSelectValue:function(){
-                return this.$store.state.totalSelect;  
+              return this.$store.state.totalSelect;  
             },
             totalPriceValue:function(){
-                return this.$store.state.totalPrice;
+              return this.$store.state.totalPrice;
             },
             table:function(){
-                return this.$store.state.table;
+              return this.$store.state.table;
+            },
+            orderItemList:function(){
+              return this.$store.state.orderItemList;            
             }
         },
         methods:{
@@ -90,8 +93,16 @@
                 window.scrollTo(0,position);
             },
             goToOrder:function(){
-                
-                this.$store.dispatch('changeTag','order');
+                if(this.totalSelectValue>0){
+
+                  this.$store.dispatch('changeTag','order');
+                  this.$store.dispatch('changeShowOrder',false);
+                }else{
+                  if(this.orderItemList.length>0){
+                    this.$store.dispatch('changeTag','order');
+                    this.$store.dispatch('changeShowOrder',true);
+                  }
+                }
             }
         }
     }

@@ -12,7 +12,10 @@ const state = {
     selectedItemQuantity:[],
     totalSelect:0,
     totalPrice:0.00,
-    showTag:'index'
+    showTag:'index',
+    showOrder:false,
+    orderItemList:[],
+    orderItemQuantity:[]
 };
 
 const mutations ={
@@ -42,10 +45,23 @@ const mutations ={
         state.menuList = data.category;
         state.dataSource = data;
         state.table = data.table;
+        state.orderItemList = data.order_info.menu_list;
+        state.orderItemQuantity = data.order_info.quantity_list;
     },
     CHANGE_TAG(state,tag){
         
         state.showTag = tag;
+    },
+    Move_SELECTED_TO_ORDER(state){
+        state.orderItemList = state.orderItemList.concat(state.selectedItemList);
+        state.orderItemQuantity = state.orderItemQuantity.concat(state.selectedItemQuantity)
+        state.selectedItemList = [];
+        state.selectedItemQuantity = [];
+        state.totalSelect = 0;
+        state.totalPrice = 0.00;
+    },
+    CHANGE_SHOW_ORDER(state,status){
+        state.showOrder = status;
     }
 };
 
@@ -81,6 +97,12 @@ const actions = {
     },
     changeTag({commit},tag){
         commit('CHANGE_TAG',tag);
+    },
+    moveSelectedToOrder({commit}){
+        commit('Move_SELECTED_TO_ORDER')
+    },
+    changeShowOrder({commit},status){
+        commit('CHANGE_SHOW_ORDER',status);
     }
 }
 export default new Vuex.Store({
