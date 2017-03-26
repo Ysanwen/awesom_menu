@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu} from 'element-ui'
+import { Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu, Collapse,CollapseItem,Pagination} from 'element-ui'
 import { Message } from 'element-ui'
 import './admin_panel.less'
 import LeftNav from './components/LeftNav.vue'
@@ -8,8 +8,9 @@ import ApiRequest from './common/ApiRequest.js'
 import AddMenu from './components/AddMenu.vue'
 import AllMenu from './components/AllMenu.vue'
 import QrcodeMenu from './components/QrcodeMenu.vue'
+import Orders from './components/Orders.vue'
 
-let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu]
+let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu,Collapse,CollapseItem,Pagination]
 for (let item in import_list){
     Vue.use(import_list[item])
 } 
@@ -20,14 +21,13 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes:[
-      { path:'/', component: AllMenu},
+      { path: '/', component: AllMenu},
       { path: '/allMenu', component: AllMenu },
       { path: '/addMenu', component: AddMenu },
-      { path:'/qrcodeMenu',component:QrcodeMenu}
-  ] 
+      { path: '/qrcodeMenu', component: QrcodeMenu },
+      { path: '/allOrder', component: Orders}
+  ]
 });
-
-
 
 let ap = new Vue({
     router,

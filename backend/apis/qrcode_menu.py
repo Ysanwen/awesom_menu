@@ -20,6 +20,8 @@ class QrcodeMenuApi(ApiAction):
         qrcode_list = []
         base_server_host = app.config['SERVER_HOST']
         output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/qrcode')
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         # create qrcode and save in static/qrcode
         for i in range(quantity):
             qrcode_item = dict()

@@ -29,6 +29,8 @@ class UploadFileApi(ApiAction):
             if v.mimetype.split('/')[0] != 'image':
                 return self.is_fail('upload file type is not image')
         output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/upload')
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         url_list = []
         for key, file in file_dict.items():
             suffix = file.filename.split('.')[-1]

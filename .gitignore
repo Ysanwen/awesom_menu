@@ -1,4 +1,5 @@
 node_modules/
-backend/static/
-frondend/build
+backend/static/upload/
+backend/static/qrcode/
+frondend/build/
 *.pyc

@@ -4,6 +4,7 @@ from .common import BaseModel
 import sqlalchemy
 from datetime import datetime
 import pickle
+import pytz
 
 
 @BaseModel.register_table(primary_id='id', primary_type='Integer')
@@ -34,7 +35,7 @@ class Menu(BaseModel):
         self.monthly_sales = Menu.MonthlySales
         self.url_address = kwargs.get('url_address', None)
         self.status = kwargs.get('status', None) if kwargs.get('status', None) else Menu.ONSELL
-        self.create_time = datetime.now()
+        self.create_time = datetime.now(pytz.timezone('Asia/Shanghai'))
 
 
 @BaseModel.register_table(primary_id='id', primary_type='Integer')

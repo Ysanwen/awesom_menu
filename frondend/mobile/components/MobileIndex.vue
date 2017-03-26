@@ -6,8 +6,8 @@
         <div id="content">
           <div class="header-picture" id="header-picture">
             <mt-swipe :auto="3000">
-              <mt-swipe-item><img src="/static/upload/644887a8-fc34-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
-              <mt-swipe-item><img src="/static/upload/a43d3252-fc28-11e6-879d-207c8f791ecf.jpg"></mt-swipe-item>
+              <mt-swipe-item><img src="/static/demo.jpg"></mt-swipe-item>
+              <mt-swipe-item><img src="/static/demo.jpg"></mt-swipe-item>
             </mt-swipe>
           </div>
           <div class="content-body">

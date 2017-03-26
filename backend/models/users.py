@@ -6,6 +6,7 @@ from uuid import uuid1
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 from backend import login_manager
+import pytz
 
 
 @BaseModel.register_table()
@@ -27,7 +28,7 @@ class User(BaseModel):
         self.username = username
         self.password = generate_password_hash(password)
         self.mobile = mobile
-        self.create_time = datetime.now()
+        self.create_time = datetime.now(pytz.timezone('Asia/Shanghai'))
         self.isActive = True
 
     @staticmethod

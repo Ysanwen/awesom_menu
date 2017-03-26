@@ -9,7 +9,7 @@
       </el-submenu>
       <el-submenu index="2">
         <template slot="title"><i class="el-icon-menu"></i>订单管理</template>
-          <el-menu-item index="2-1">进行中订单</el-menu-item>
+          <el-menu-item index="2-1" :route='allOrder'>进行中订单</el-menu-item>
           <el-menu-item index="2-2">已完成订单</el-menu-item>
       </el-submenu>
       <el-submenu index="3">
@@ -25,10 +25,11 @@
    export default {
     data:function () {
       return{
-        useRouter:true,
-        allMenu:{path:'/allMenu'},
-        addMenu:{path:'/addMenu'},
-        qrcodeMenu:{path:'/qrcodeMenu'}
+        useRouter: true,
+        allMenu: {path:'/allMenu'},
+        addMenu: {path:'/addMenu'},
+        qrcodeMenu: {path:'/qrcodeMenu'},
+        allOrder: {path:'/allOrder'}
       }
     },
     methods: {

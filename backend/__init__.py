@@ -3,7 +3,7 @@
 import importlib
 from flask import Flask
 from flask_script import Manager
-from flask_dataset import Dataset
+from .dataset import Dataset
 from flask_login import LoginManager
 
 app = Flask(__name__)

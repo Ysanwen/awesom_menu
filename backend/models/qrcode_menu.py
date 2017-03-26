@@ -3,6 +3,7 @@
 from .common import BaseModel
 import sqlalchemy
 from datetime import datetime
+import pytz
 
 
 @BaseModel.register_table(primary_id='id', primary_type='Integer')
@@ -21,4 +22,4 @@ class QrcodeMenu(BaseModel):
         self.table_name = kwargs.get('table_name', None)
         self.table_id = kwargs.get('table_id', None)
         self.url_address = kwargs.get('url_address', None)
-        self.create_time = datetime.now()
+        self.create_time = datetime.now(pytz.timezone('Asia/Shanghai'))

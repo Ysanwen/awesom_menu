@@ -11,7 +11,7 @@ if (mode === 'production') {
     baseUrl = "/static/"
 } else {
     // baseUrl = "http://localhost:8080/";
-    baseUrl = "http://192.168.31.199:8080/";
+    baseUrl = "http://192.168.31.113:8080/";
 }
 
 module.exports = {
