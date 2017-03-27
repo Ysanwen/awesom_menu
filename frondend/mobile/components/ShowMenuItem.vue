@@ -18,7 +18,9 @@
 
             </svg>
           </span>
-          <span class="order-number" :style="showOrder ? marginBig:marginSmall">{{ showOrder ? '数量：' : ''}}{{ quantity  }}</span>
+          <p v-if="showOrder" class="order-number" :style="marginBig" :key="item.name">{{ '数量：' + quantity  }}</p>
+
+          <p v-else class="order-number" :style="marginSmall" :key="item.name">{{ quantity  }}</p>
           <!-- <i class="material-icons add-icon" @click="addQuantity">add_circle</i> -->
           <span class="material-icons add-icon" @click="addQuantity" :style="showOrder ? hideIcon:showIcon">
             <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
@@ -44,14 +46,14 @@ import 'mint-ui/lib/style.css'
                 quantity:this.defaultQuantity,
                 showIcon:{display:'inline-block'},
                 hideIcon:{display:'none'},
-                marginBig:{marginLeft:'5rem',fontSize:'14px',width:'5rem'},
-                marginSmall:{marginLeft:'0.5rem',fontSize:'22px',width:'0.5rem'}
+                marginBig:{fontSize:'0.85rem;',width:'70%'},
+                marginSmall:{fontSize:'1.2rem',width:'25%'}
             }
         },
         props:['item','defaultQuantity'],
         computed:{
             showOrder:function(){
-                return this.$store.state.showOrder;
+              return this.$store.state.showOrder;
             },
         },
         methods:{
@@ -84,13 +86,14 @@ import 'mint-ui/lib/style.css'
         height: 100%;
     }
     .food-content{
-        display: inline-block;
-        height: 6rem;
-        margin: auto;
-        width: 58%;
-        padding-left: 5px;
-        line-height: 1rem;
-        font-size: 12px;
+      display: inline-block;
+      height: 6rem;
+      margin: auto;
+      width: 58%;
+      padding-left: 1%;
+      line-height: 1rem;
+      font-size: 0.75rem;
+      float: right;
     }
     .food-content p{
         padding: 0px;
@@ -108,27 +111,31 @@ import 'mint-ui/lib/style.css'
         line-height: 1.5rem;
         color: red;
         height: 1.5rem;
-        font-size: 14px;
+        font-size: 0.85rem;
         font-weight: 700;
         display: inline-block;
-        float: left
+        float: left;
+        width: 25%;
     }
     .material-icons{
         color: rgba(49, 144, 232,1);
     }
     .remove-icon{
-        margin-left: 3rem;
+        width: 25%;
+        text-align: center;
+        float: left;
     }
     .order-number{
-        width: 1.5rem;
-        height: 1.5rem;
-        display: inline-block;
-        font-size: 22px;
-        position: absolute;
         line-height: 1.5rem;
-        margin-left: 0.5rem
+        height: 1.5rem;
+        float: right;
+        display: inline-block;
+        float: left;
+        text-align: center;
     }
     .add-icon{
-        margin-left: 2rem;
+        width: 25%;
+        float: right;
+        text-align: center;
     }
 </style>

@@ -4,21 +4,21 @@
           <mt-header fixed :title="table.table_name" id="header-area"></mt-header>
         </div>
         <div class="header-nav">
-          <mt-button type="default" @click="goToIndex">继续点单</mt-button>
-          <mt-button :type="showOrder?'default':'primary'" @click="showSlected">当前已选</mt-button>
-          <mt-button :type="showOrder?'primary':'default'" @click="showOrders">已点订单</mt-button>
+          <mt-button class="button-menu" type="default" @click="goToIndex">继续点单</mt-button>
+          <mt-button class="button-menu" :type="showOrder?'default':'primary'" @click="showSlected">当前已选</mt-button>
+          <mt-button class="button-menu" :type="showOrder?'primary':'default'" @click="showOrders">已点订单</mt-button>
           
         </div>
         <div v-if="showOrder" class="content order-content">
           <div v-for='(con,index) in orderItemList' class="order-item">
             <!-- add menu item conponent -->
-            <show-menu-item :item="con" v-bind:defaultQuantity='orderItemQuantity[index]'></show-menu-item>
+            <show-menu-item :item="con" v-bind:defaultQuantity='orderItemQuantity[index]' :key="con.name+'s'"></show-menu-item>
           </div>
         </div>
         <div v-else class="content order-content">
           <div v-for='(con,index) in selectedItemList' class="order-item">
             <!-- add menu item conponent -->
-            <show-menu-item :item="con" v-bind:defaultQuantity='selectedItemQuantity[index]'></show-menu-item>
+            <show-menu-item :item="con" v-bind:defaultQuantity='selectedItemQuantity[index]' :key="con.name+'n'"></show-menu-item>
           </div>
         </div>
         <div v-if="showOrder" id="footer">
@@ -164,6 +164,10 @@
     z-index: 1;
     background-color: white;
   }
+  .button-menu{
+    font-size: 0.85rem;
+    width: 30%;
+  }
   .order-content{
     margin-top: 6.5rem;
     margin-left: 0.5rem;
@@ -176,6 +180,7 @@
   .order-item{
     border-bottom: 1px solid #eaeaea;
     margin-top: 2px;
+    min-height: 6rem;
   }
   .order-content .food-content{
     width: 65%;

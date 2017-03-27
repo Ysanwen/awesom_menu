@@ -21,7 +21,7 @@
                   <a class="right-content-header" :id='"item"+menuList.indexOf(menu_item)'>{{ menu_item }}</a>
                   <div v-for="con in dataSource[menu_item]" class="inner-content" >
                     <!-- add menu item conponent -->
-                    <show-menu-item :item="con" 
+                    <show-menu-item :item="con" :key="con.name"
                         v-bind:defaultQuantity="selectedItemList.indexOf(con)>=0?selectedItemQuantity[selectedItemList.indexOf(con)]:0"></show-menu-item>
                   </div>
                 </div> 
@@ -101,6 +101,9 @@
                   if(this.orderItemList.length>0){
                     this.$store.dispatch('changeTag','order');
                     this.$store.dispatch('changeShowOrder',true);
+                  }else{
+                    this.$store.dispatch('changeTag','order');
+                    this.$store.dispatch('changeShowOrder',false);
                   }
                 }
             }
