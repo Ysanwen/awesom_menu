@@ -128,6 +128,9 @@
           that.upload_file_list = [];
           Message.success('创建成功！');
         })
+      },
+      resetForm:function(){
+        this.$refs['addMenuForm'].resetFields();
       }
     }
   }

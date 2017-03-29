@@ -70,7 +70,11 @@ class OrderApi(ApiAction):
     @request_method_check(['POST'])
     @parse_arguments(
         Argument('oid', str, required=True),
-        Argument('operation', str, required=True))
+        Argument('operation', str, required=True),
+        Argument('status', int, required=False),
+        Argument('menu_list', list, required=False),
+        Argument('quantity_list', list, required=False),
+        Argument('item_status_list', list, required=False))
     def modify_order(self, arguments):
         # 管理员修改订单状态
         oid = arguments['oid']
@@ -78,7 +82,7 @@ class OrderApi(ApiAction):
         if operation == 'status':
             status = arguments.get('status', None)
             if status and status in [Order.CANCLE, Order.HASPAID, Order.NOTPAID]:
-                result = Order.update({'oid': oid, 'status': status}, [oid])
+                result = Order.update({'oid': oid, 'status': status}, ['oid'])
                 return self.is_done({'modify': 'success'}) if result else self.is_fail('update error!')
             else:
                 return self.is_fail('status is not right')
@@ -86,14 +90,14 @@ class OrderApi(ApiAction):
             menu_list = arguments.get('menu_list', None)
             quantity_list = arguments.get('quantity_list', None)
             if menu_list and quantity_list:
-                result = Order.update({'oid': oid, 'menu_list': pickle.dumps(menu_list), 'quantity_list': pickle.dumps(quantity_list)}, [oid])
+                result = Order.update({'oid': oid, 'menu_list': pickle.dumps(menu_list), 'quantity_list': pickle.dumps(quantity_list)}, ['oid'])
                 return self.is_done({'modify': 'success'}) if result else self.is_fail('update error!')
             else:
                 return self.is_fail('error params: no menu_list or quantity_list')
         elif operation == 'item_status':
             item_status_list = arguments.get('item_status_list', None)
             if item_status_list:
-                result = Order.update({'oid': oid, 'item_status_list': pickle.dumps(item_status_list)}, [oid])
+                result = Order.update({'oid': oid, 'item_status_list': pickle.dumps(item_status_list)}, ['oid'])
                 return self.is_done({'modify': 'success'}) if result else self.is_fail('update error!')
             else:
                 return self.is_fail('error params: no item_status_list')

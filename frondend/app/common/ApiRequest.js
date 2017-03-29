@@ -36,7 +36,7 @@ module.exports = {
         }).then((json)=>{
             callback_function(json)
         }).catch((ex)=>{
-            alert('parsing failed', ex)
+            console.log('parsing failed', ex)
         })
     },
     ajUploadFile:function(api_suffix,files_object,callback_function){
