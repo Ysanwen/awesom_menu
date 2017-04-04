@@ -54,6 +54,9 @@
       }
     },
     computed:{
+      userId:function(){
+        return this.$store.state.userId;
+      },
       table:function(){
         return this.$store.state.table;
       },
@@ -112,8 +115,8 @@
           let table_id = this.table.table_id;
           let table_name = this.table.table_name;
           let order_price = this.totalPriceValue;
-
-          let post_data = {menu_list:menu_list,quantity_list:quantity_list,table_id:table_id,table_name:table_name,order_price:order_price};
+          let uid = this.userId;
+          let post_data = {uid:uid,menu_list:menu_list,quantity_list:quantity_list,table_id:table_id,table_name:table_name,order_price:order_price};
 
           let url;
           if(this.orderItemList.length>0){

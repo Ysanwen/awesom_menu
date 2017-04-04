@@ -14,7 +14,9 @@ Vue.use(Input);
 var ap = new Vue({
     el: '#app',
     data: {
-        message: 'Awesome !!!',showDialog: false,clickType:''
+        message: 'Awesome !!!',
+        showDialog: false,
+        clickType:''
     },
     components:{
         SignComponent
@@ -27,8 +29,7 @@ var ap = new Vue({
         },
         popup_sign_up:function(){
             this.showDialog = !this.showDialog;
-            this.clickType = 'sign_up'
-           
+            this.clickType = 'sign_up'  
         }
     }
 });

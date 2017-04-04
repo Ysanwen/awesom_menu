@@ -29,7 +29,9 @@ class Order(BaseModel):
         'create_time': sqlalchemy.DateTime,
         'paid_time': sqlalchemy.DateTime,
         'status': sqlalchemy.Integer,
-        'comment': sqlalchemy.String
+        'comment': sqlalchemy.String,
+        'pay_type': sqlalchemy.String,
+        'uid': sqlalchemy.String
     }
 
     def __init__(self, **kwargs):
@@ -45,6 +47,8 @@ class Order(BaseModel):
         self.paid_time = kwargs.get('paid_time', datetime.now(pytz.timezone('Asia/Shanghai')))
         self.status = kwargs.get('status', Order.NOTPAID)
         self.comment = kwargs.get('comment', '')
+        self.pay_type = kwargs.get('pay_type', '')
+        self.uid = kwargs.get('uid', '')
 
     @classmethod
     def get_current_order(cls, table_id):

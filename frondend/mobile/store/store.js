@@ -5,6 +5,7 @@ import ApiRequest from '../../app/common/ApiRequest.js'
 Vue.use(Vuex)
 
 const state = {
+    userId: '',
     menuList:[],
     dataSource:[],
     table:{},
@@ -48,6 +49,9 @@ const mutations ={
         state.orderItemList = data.order_info.menu_list;
         state.orderItemQuantity = data.order_info.quantity_list;
     },
+    SET_USER_ID(state,uid){
+        state.userId = uid;
+    },
     CHANGE_TAG(state,tag){
         
         state.showTag = tag;
@@ -83,6 +87,7 @@ const actions = {
                 let data = json.data;
                 
                 commit('INIT_DATA',data);
+                commit('SET_USER_ID', url_par);
             }else{
                 alert(json.message);
             }

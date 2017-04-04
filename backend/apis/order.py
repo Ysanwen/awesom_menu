@@ -3,6 +3,8 @@ from .common import ApiAction, request_method_check, Argument, parse_arguments
 import pickle
 from backend.models import Order, QrcodeMenu
 from flask_login import current_user
+from datetime import datetime
+import pytz
 
 
 class OrderApi(ApiAction):
@@ -12,6 +14,7 @@ class OrderApi(ApiAction):
 
     @request_method_check(['POST'])
     @parse_arguments(
+        Argument('uid', str, required=True),
         Argument('table_id', str, required=True),
         Argument('table_name', str, required=True),
         Argument('menu_list', list, required=True),
@@ -104,6 +107,23 @@ class OrderApi(ApiAction):
         else:
             return self.is_fail('unknow operation')
 
+    @request_method_check(['POST'])
+    @parse_arguments(
+        Argument('oid', str, required=True),
+        Argument('payType', str, required=True),
+        Argument('actualityPay', float, required=True),
+        Argument('comment', str, required=True))
+    def pay_order(self, arguments):
+        oid = arguments['oid']
+        pay_type = arguments['payType']
+        actuality_paid = arguments['actualityPay']
+        comment = arguments['comment']
+        paid_time = datetime.now(pytz.timezone('Asia/Shanghai'))
+        result = Order.update({
+            'oid': oid, 'pay_type': pay_type, 'actuality_paid': actuality_paid,
+            'comment': comment, 'paid_time': paid_time, 'status': Order.HASPAID}, ['oid'])
+        return self.is_done({'paid': 'success'}) if result else self.is_fail('paid fail')
+
     @request_method_check(['GET'])
     # 管理员获取全部进行中订单
     def get_all_orders(self, arguments):
@@ -124,3 +144,23 @@ class OrderApi(ApiAction):
                 order_item['item_status_list'] = pickle.loads(order_item['item_status_list'])
                 orders.append(order_item)
         return self.is_done(orders)
+
+    @request_method_check(['GET'])
+    @parse_arguments(
+        Argument('currentPage', int, required=True),
+        Argument('pageSize', int, required=True))
+    def get_finished_orders(self, arguments):
+        if not current_user.is_authenticated:
+            return self.is_fail('not allowed')
+        uid = current_user['id']
+        currentPage = arguments['currentPage']
+        pageSize = arguments['pageSize']
+        offset = (currentPage - 1) * pageSize
+        result = Order.find(uid=uid, _offset=offset, _limit=pageSize, return_count=True, status=Order.HASPAID)
+        total = result.pop()['total']
+
+        for item in result:
+            item['menu_list'] = pickle.loads(item['menu_list'])
+            item['quantity_list'] = pickle.loads(item['quantity_list'])
+            item['item_status_list'] = pickle.loads(item['item_status_list'])
+        return self.is_done({'data': result, 'total': total})

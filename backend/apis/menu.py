@@ -1,6 +1,10 @@
 # -*-coding:utf-8-*-
+import os
+import json
+import uuid
 from .common import ApiAction, request_method_check, Argument, parse_arguments
 from flask_login import current_user
+from flask import request
 import pickle
 from backend.models import Menu, Category, QrcodeMenu, Order
 
@@ -21,6 +25,43 @@ class MenuApi(ApiAction):
         else:
             result = []
         return self.is_done(result)
+
+    @request_method_check(['POST'])
+    @parse_arguments(
+        Argument('id', int, required=True),
+        Argument('name', str, required=True),
+        Argument('unit', str, required=True),
+        Argument('type', str, required=True),
+        Argument('price', float, required=True),
+        Argument('quantity', int, required=True),
+        Argument('status', int, required=True),
+        Argument('new_url_list', str, required=True))
+    def update_menu(self, arguments):
+        file_dict = request.files.to_dict()
+        new_url_list = arguments['new_url_list']
+        new_url_list = json.loads(new_url_list)
+        del arguments['new_url_list']
+        if file_dict:
+            # 保存文件后，更新new_url_list
+            for k, v in file_dict.items():
+                if v.mimetype.split('/')[0] != 'image':
+                    return self.is_fail('upload file type is not image')
+            output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/upload')
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            url_list = []
+            for key, file in file_dict.items():
+                suffix = file.filename.split('.')[-1]
+                filename = str(uuid.uuid1()) + '.' + suffix
+                file.save(os.path.join(output_dir, filename))
+                url_list.append(filename)
+            new_url_list.extend(url_list)
+            arguments['url_address'] = pickle.dumps(new_url_list)
+            result = Menu.update(arguments, ['id'])
+        else:
+            arguments['url_address'] = pickle.dumps(new_url_list)
+            result = Menu.update(arguments, ['id'])
+        return self.is_done({'update': 'success'}) if result else self.is_fail('update fail')
 
 
 class CategoryApi(ApiAction):

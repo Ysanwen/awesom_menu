@@ -5,7 +5,7 @@
         <label style="width: 80px" class="picture-label">图片</label>
         <div v-for="(item,index) in url_list" class="img-wrapper">
           <i class="el-icon-close" @click="handleRemovePicture(index)"></i>
-          <img :src="item" class="upload-label"/>
+          <img :src="createLink(item)" class="upload-label"/>
         </div>
         <label @click="handleSelectPicture" class="upload-label">
           <i class="el-icon-plus"></i>
@@ -39,7 +39,8 @@
 
         <el-form-item>
           <el-button type="primary" @click="submitForm">提交</el-button>
-          <el-button @click="resetForm('addMenuForm')">重置</el-button>
+          <el-button v-if="operation == 'editMenu'" @click="cancelEdit">取消</el-button>
+          <el-button v-else @click="resetForm('addMenuForm')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -62,7 +63,9 @@
     data:function () {
       return {
         url_list:[],
+        url_list_len:0,
         upload_file_list:[],
+        operation:'addMenu',
         addMenuForm:{
           name:'',
           type:'',
@@ -72,25 +75,57 @@
           status:'0'
         },
         validateRules:{
-          name:[{required:true}],
-          type:[{required:true}],
-          unit:[{required:true}],
-          price:[{required:true}],
-          quantity:[{required:true}],
+          name:[{required:true, message: '请输入菜名', trigger: 'blur'}],
+          type:[{required:true, message: '请输入类别', trigger: 'blur'}],
+          unit:[{required:true, message: '请输入计费单位', trigger: 'blur'}],
+          price:[{required:true, type:'number', message: '请输入单价', trigger: 'blur'}],
+          quantity:[{required:true, type:'number', message: '请输入数量', trigger: 'blur'}],
           status:[{required:true}]
         }
       }
     },
-
+    created: function(){
+      let operation = this.$route.params.operation;
+      this.operation = operation;
+      if(operation === 'editMenu'){
+        let item = this.$route.params.item;
+        item['status'] = item['status'] === '热销中' ? '0' : '1';
+        this.addMenuForm = item;
+        this.url_list = item['url_address'];
+        this.url_list_len = item['url_address'].length;
+      }
+    },
     methods:{
       handleSelectPicture:function () {
         this.$refs['input'].click()
       },
       handleRemovePicture:function(index){
-        this.url_list.splice(index,1);
-        this.upload_file_list.splice(index,1);
+        if(this.operation === 'addMenu'){
+          this.url_list.splice(index,1);
+          this.upload_file_list.splice(index,1);
+        }
+        if(this.operation === 'editMenu'){
+          let remove_item = this.url_list[index];
+          if(remove_item.indexOf('data') === -1){
+            this.url_list.splice(index,1);
+            this.url_list_len -= 1;
+          }
+          else{
+            this.url_list.splice(indx,1);
+            this.upload_file_list.splice(index-this.url_list_len, 1);
+          }
+        }
       },
-      
+      createLink:function(link){
+        let url;
+        if(link.indexOf('data') === -1){
+          url = '/static/upload/' + link; 
+        }
+        else{
+          url = link;
+        }
+        return url
+      },
       handleChange:function () {
         let that = this;
         if(this.$refs['input'].files.length == 1){
@@ -111,23 +146,78 @@
           Message.alert('no picture selected');
         }
       },
-      submitForm:function (form) {
-
-        let data = {};
-        for(let key in this.addMenuForm){
-          data[key] = this.addMenuForm[key]
+      submitForm:function(){
+        if(this.operation === 'addMenu'){
+          this.submitAdd();
         }
-        let files = this.upload_file_list;
+        if(this.operation === 'editMenu'){
+          this.submitEdit();
+        }
+      },
+      submitAdd:function () {
         let that = this;
-        ApiRequest.ajUploadFile('upload/upload_file',{data:data,files:files},(json)=>{
-          
-          that.$refs['addMenuForm'].resetFields();
-          for(let item in that.upload_file_list){
-            that.handleRemovePicture(item);
+        this.$refs['addMenuForm'].validate((valid)=>{
+          if(valid){
+            let data = {};
+            for(let key in that.addMenuForm){
+              data[key] = that.addMenuForm[key]
+            }
+            let files = that.upload_file_list;
+            if(files.length <=0){
+              Message.error('请选择图片');
+              return
+            }
+            
+            ApiRequest.ajUploadFile('upload/upload_file',{data:data,files:files},(json)=>{
+              if(json.success){
+                that.$refs['addMenuForm'].resetFields();
+                for(let item in that.upload_file_list){
+                  that.handleRemovePicture(item);
+                }
+                that.upload_file_list = [];
+                Message.success('创建成功！');
+              }
+              else{
+                Message.error(json.message);
+              }
+            })
           }
-          that.upload_file_list = [];
-          Message.success('创建成功！');
+          else{
+            Message.error('请填写表单！')
+          }
         })
+          
+      },
+      submitEdit: function(){
+        let menu_id = this.$route.params.item.id;
+        let new_url_list = this.url_list.filter((item)=>{if(item.indexOf('data')===-1){return item}});
+        let files = this.upload_file_list;
+        let data = this.addMenuForm;
+        if(new_url_list.lenght<=0 && files.length<=0){
+          Message.error('请选择图片');
+          return
+        }
+        let that = this;
+        this.$refs['addMenuForm'].validate((valid)=>{
+          if(valid){
+            data['new_url_list'] = JSON.stringify(new_url_list);
+            ApiRequest.ajUploadFile('menu/update_menu',{data:data,files:files},(json)=>{
+              if(json.success){
+                Message.success('跟新成功');
+                that.$router.push({'path':'/allMenu'})
+              }
+              else{
+                Message.error('跟新失败')
+              }
+            })
+          }
+          else{
+            Message.error('请填写表单！')
+          }
+        })
+      },
+      cancelEdit: function(){
+        this.$router.push({'path':'/allMenu'})
       },
       resetForm:function(){
         this.$refs['addMenuForm'].resetFields();

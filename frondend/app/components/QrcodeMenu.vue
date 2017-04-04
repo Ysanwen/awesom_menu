@@ -1,6 +1,6 @@
 <template>
   <el-col :span="20">
-    <div class="create-qrcode">
+    <div class="create-qrcode no-print">
       <el-input v-model="inputNumber" placeholder="请输入生成二维码数量" class="input-number"></el-input>
       <el-button type="primary" class="create-qrcode-button" @click="createQrcode">确定生成</el-button>
     </div>

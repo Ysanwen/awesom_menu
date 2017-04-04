@@ -2,8 +2,8 @@
 <div class="content-text">
   <div v-if="showInfo" class="show-info" :source="copyItemDict">
     <span class="table-num">当前桌号：{{ new_item_dict["table_name"] }}</span>
-    <el-button type="primary" class="content-button" @click="showEdit">修改</el-button>
-    <el-button type="primary" class="content-button">打印</el-button>
+    <el-button type="primary" class="content-button no-print" @click="showEdit">修改</el-button>
+    <el-button type="primary" class="content-button no-print" @click="print">打印</el-button>
   </div>
   <div v-else class="edit-form">
     <el-input v-model="inputName" placeholder="请输入桌号" class="input-name"></el-input>
@@ -63,7 +63,9 @@ export default {
       }
       // this.showInfo = true;
     },
-    
+    print: function(){
+      window.print();
+    },
     submitCancel:function(){
       this.inputName = '';
       this.showInfo= true;

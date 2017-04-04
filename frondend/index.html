@@ -13,7 +13,9 @@
     </div>
     <sign-component :show-dialog="showDialog" :click-type="clickType"></sign-component>
     <div class="content">
-        <div class="message" v-cloak>{{message}}</div>
+        <template>
+        <div class="message">{{message}}</div>
+        </template>
     </div>
     
   </div>

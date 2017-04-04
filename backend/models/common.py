@@ -68,14 +68,17 @@ class BaseModel(dict):
         _limit = kwargs.pop('_limit', None) or kwargs.pop('limit', None)
         _offset = kwargs.pop('_offset', 0) or kwargs.pop('offset', None)
         _step = kwargs.pop('_step', 5000) or kwargs.pop('step', 5000)
-        return_count = kwargs.get('return_count', None)
-        kwargs.update({'_limit': _limit, '_offset': _offset, '_step': _step})
-        result = cls.get_table().find(*args, **kwargs)
+        return_count = kwargs.pop('return_count', None)
         if return_count:
-            total = cls.get_table.count(*args, **kwargs)
+            total = cls.get_table().count(*args, **kwargs)
+            kwargs.update({'_limit': _limit, '_offset': _offset, '_step': _step})
+            result = cls.get_table().find(*args, **kwargs)
             result = [dict(item) for item in result]
-            return result.append({'total': total})
+            result.append({'total': total})
+            return result
         else:
+            kwargs.update({'_limit': _limit, '_offset': _offset, '_step': _step})
+            result = cls.get_table().find(*args, **kwargs)
             if result:
                 return [dict(item) for item in result]
             else:

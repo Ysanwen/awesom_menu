@@ -16,7 +16,7 @@
             <span style="float:right">{{item['status']}}</span>
           </div>
           <div>  
-            <el-button type="text" class="button" @click="modifyMenu(item)">更多操作</el-button>
+            <el-button type="text" class="button" @click="modifyMenu(item)">编辑</el-button>
           </div>
       </div>
     </el-card>
@@ -51,7 +51,7 @@
       },
       methods:{
         modifyMenu:function(itemData){
-            console.log(itemData)
+            this.$router.push({name: 'addMenu', params:{operation:'editMenu',item:itemData}})
         }
       }
     }

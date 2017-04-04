@@ -4,7 +4,7 @@
       
       <div class="list-content">
         <el-collapse v-model="activeNames">
-          <el-collapse-item v-for="i in showItems" :name="i.id">
+          <el-collapse-item v-for="i in displayItems" :name="i.id" id="my-title">
             <template slot="title">
               <div class="content-title">
                 <div class="inner-title">桌号:{{i.table_name}}</div>
@@ -43,20 +43,49 @@
           :total="total">
         </el-pagination>
       </div>
+
+      <el-dialog title="结算" v-model="dialogVisible" size="tiny">
+      <div>
+        <span>付款方式：</span>
+        <el-radio-group v-model="payType">
+          <el-radio label="现金">现金</el-radio>
+          <el-radio label="支付宝">支付宝</el-radio>
+          <el-radio label="微信">微信</el-radio>
+          <el-radio label="刷卡">刷卡</el-radio>
+        </el-radio-group>
+      </div>
+      <div class="pay-form">  
+        <span>订单金额：{{' ' + parseFloat(currentOrder['order_price']).toFixed(2) + ' 元'}}</span>
+        <el-input class="input-money" v-model="actualityPay" placeholder="实收金额" type="number" min="0"></el-input>
+      </div>
+      <div class="pay-form">  
+        <span>备注：</span>
+        <el-input v-model="comment" placeholder="折扣,去零等" type="textarea" :rows="1"></el-input>
+      </div> 
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitPay">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
   </el-col>
 </template>
 
 <script>
   import Vue from 'vue'
   import ApiRequest from '../common/ApiRequest.js'
-  import { Message, Loading} from 'element-ui'
+  import { Message, Loading, MessageBox} from 'element-ui'
   export default {
     data: function(){
       return {
-        total:0,
+        dialogVisible: false,
+        currentOrder: {},
+        actualityPay:'',
+        comment: '',
+        payType:'',
         pageSize: 20,
         currentPage: 1,
-        displayItems: [],
         totalItems: [],
         activeNames: [],
         inProductionStyle: {backgroundColor:'#20a0ff',color: 'white'},
@@ -69,9 +98,7 @@
       let self = this;
       ApiRequest.ajGet(url, (json)=>{
         if(json.success){
-          self.total = json.data.length;
           self.totalItems = json.data;
-          self.displayItems = json.data.slice((self.currentPage-1)*self.pageSize, self.currentPage*self.pageSize);
           loadingInstance.close();
         }
         else{
@@ -81,8 +108,11 @@
       })
     },
     computed:{
-      showItems: function(){
-        return this.displayItems;
+      displayItems: function(){
+        return this.totalItems.slice((this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize);
+      },
+      total: function(){
+        return this.totalItems.length;
       }
     },
     methods: {
@@ -139,30 +169,67 @@
         let oid = order.oid;
         let url = "order/modify_order";
         let data = {oid: oid, status:-1, operation: 'status'};
-        let loadingInstance = Loading.service({text:'加载中......'});
         let self = this;
-        ApiRequest.ajPost(url, data, (json)=>{
+        
+        MessageBox.confirm('此操作将永久删除该订单, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let loadingInstance = Loading.service({text:'加载中......'});
+          ApiRequest.ajPost(url, data, (json)=>{
+            if(json.success){
+              let index = self.totalItems.indexOf(order);
+              self.totalItems.splice(index,1);
+              loadingInstance.close();
+            }
+            else{
+              loadingInstance.close();
+              Message.error(json.message);
+            }
+          })   
+        }).catch(() => {
+        });    
+      },
+      payOrder:function(order){
+
+        let item_status_list = order['item_status_list'];
+        let isCompleted = item_status_list.map((item)=>{return item=='制作完成'}).reduce((pre,cur)=>{return pre&&cur});
+        if(!isCompleted){
+          Message.info('还有未完成项，不能结算');
+          return
+        }else{
+          this.dialogVisible = true;
+          this.currentOrder = order;
+        }
+      },
+      submitPay: function(){
+        let payType = this.payType;
+        let actualityPay = this.actualityPay;
+        let comment = this.comment;
+        if(['现金','支付宝','微信','刷卡'].indexOf(payType) == -1){
+          Message.error('请选择支付方式！');
+          return
+        }
+        if(isNaN(actualityPay) || actualityPay=='' || actualityPay<0){
+          Message.error('请选输入实付金额！');
+          return 
+        }
+        let self = this;
+        let data = {oid: this.currentOrder['oid'], payType: payType, actualityPay: actualityPay, comment: comment}
+        let loadingInstance = Loading.service({text:'加载中......'});
+        ApiRequest.ajPost('order/pay_order', data, (json)=>{
           if(json.success){
-            let index = self.displayItems.indexOf(order);
-            self.displayItems.splice(index,1);
+            let index = self.totalItems.indexOf(self.currentOrder);
+            self.totalItems.splice(index,1);
             loadingInstance.close();
+            self.dialogVisible = false;
           }
           else{
             loadingInstance.close();
             Message.error(json.message);
           }
         })
-      },
-      payOrder:function(order){
-
-        let item_status_list = order['item_status_list'];
-        let isCompleted = item_status_list.map((item)=>{return item=='制作完成'}).reduce((pre,cur)=>{pre&&cur});
-        if(!isCompleted){
-          Message.info('还有未完成项，不能结算');
-          return
-        }else{
-          console.log('paid');
-        }
       },
       handleCurrentChange: function(currentPage){
         this.currentPage = parseInt(currentPage);
@@ -172,13 +239,16 @@
   }
 </script>
 
-<style scoped>
+<style>
   .order-header{
     margin-left: 2%;
     padding-left: 35%;
     font-weight: 600;
     min-height: 3rem;
     line-height: 3rem;
+  }
+  #my-title .el-collapse-item__header{
+    height: initial !important;
   }
   .list-content{
     width: 96%;
@@ -213,6 +283,13 @@
     margin-left: 2%;
     text-align: right;
     margin-top: 1rem;
+  }
+  .pay-form{
+    margin-top: 1rem;
+  }
+  .input-money{
+    width: 25%;
+    margin-left: 5%;
   }
 
 </style>

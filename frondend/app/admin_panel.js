@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu, Collapse,CollapseItem,Pagination} from 'element-ui'
+import { Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu, Collapse,CollapseItem,Pagination,Radio,RadioGroup} from 'element-ui'
 import { Message } from 'element-ui'
 import './admin_panel.less'
 import LeftNav from './components/LeftNav.vue'
@@ -9,23 +9,23 @@ import AddMenu from './components/AddMenu.vue'
 import AllMenu from './components/AllMenu.vue'
 import QrcodeMenu from './components/QrcodeMenu.vue'
 import Orders from './components/Orders.vue'
+import FinishedOrder from './components/FinishedOrder.vue'
 
-let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu,Collapse,CollapseItem,Pagination]
+let import_list = [Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu,Collapse,CollapseItem,Pagination,Radio,RadioGroup]
 for (let item in import_list){
     Vue.use(import_list[item])
 } 
 
 Vue.use(VueRouter);
 
-// const Bar = { template: '<div>addMenu</div>' };
-
 const router = new VueRouter({
   routes:[
       { path: '/', component: AllMenu},
       { path: '/allMenu', component: AllMenu },
-      { path: '/addMenu', component: AddMenu },
+      { path: '/addMenu', name:'addMenu', component: AddMenu },
       { path: '/qrcodeMenu', component: QrcodeMenu },
-      { path: '/allOrder', component: Orders}
+      { path: '/allOrder', component: Orders},
+      { path: '/finishedOrder', component: FinishedOrder}
   ]
 });
 
@@ -68,11 +68,5 @@ let ap = new Vue({
                 Message.error(json.message)
             }
         })
-    },
-    // computed:{
-    //     username:function(){
-    //         console.log('computed')
-    //         return 'ss'
-    //     }
-    // }
+    }
 })
