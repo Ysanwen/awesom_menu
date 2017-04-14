@@ -7,7 +7,7 @@
                   <el-input v-model.number="form.user_name" auto-complete="off" key='user_name'></el-input>
                 </el-form-item>
                 <el-form-item v-if="clickType=='sign_up'" label="验证码" :label-width="formLabelWidth" prop="verify_code">
-                  <el-input v-model.number="form.verify_code" auto-complete="off" class="verify-style" key='verify_code'></el-input>
+                  <el-input v-model="form.verify_code" auto-complete="off" class="verify-style" key='verify_code'></el-input>
                   <el-button type="primary" v-on:click="get_verify_code" class="verifycode-button">获取验证码</el-button>
                 </el-form-item>
                 <el-form-item label="密码" :label-width="formLabelWidth" prop="password1">
@@ -68,14 +68,14 @@
 
                 // validate rules
                 rules1:{
-                    user_name: [{ type:'number',size:11,required:true, message:'请输入11位电话号码',trigger:'blur'}],
-                    password1:[{ required:true, min:6,max:50,message:'密码长度6-20',trigger:'blur'}]
+                    user_name: [{ required:true, pattern: /^1[0-9]{10}$/, message:'请输入11位电话号码',trigger:'blur'}],
+                    password1:[{ required:true, min:6,max:20,message:'密码长度6-20',trigger:'blur'}]
                 },
                 rules2:{
-                    user_name: [{ type:'number',size:11,required:true, message:'请输入11位电话号码',trigger:'blur'}],
-                    password1:[{ required:true, min:6,max:50,message:'密码长度6-20',trigger:'blur'}],
-                    password2:[{ required:true, min:6,max:50,message:'密码长度6-20',trigger:'blur'}],
-                    verify_code:[{type:'number',size:6,required:true, trigger:'blur'}]  
+                    user_name: [{ required:true, pattern: /^1[0-9]{10}$/, message:'请输入11位电话号码',trigger:'blur'}],
+                    password1:[{ required:true, min:6,max:20,message:'密码长度6-20',trigger:'blur'}],
+                    password2:[{ required:true, min:6,max:20,message:'密码长度6-20',trigger:'blur'}],
+                    verify_code:[{required:true, pattern: /^[0-9]{6}$/, message:'请输入6位验证码',trigger:'blur'}]  
                 },
                 showForget: false
             }
@@ -83,36 +83,35 @@
         methods:{
             get_verify_code:function(){
                 let url = 'user/get_verify_code?mobile='+this.sign_up_form.user_name;
-                let patt=new RegExp('^[0-9]{11}$');
-                let mobile = this.sign_up_form.user_name;
-                if(!patt.test(mobile)){
-                    alert('请输入11位电话号码');
-                    return
-                }
                 ApiRequest.ajGet(url,(json) =>{
-                    console.log(json)
+                    if(json.success){
+                      console.log(json.data)  
+                    }else{
+                       Message.error({message:json.message,showClose:true})
+                    }
                 })
             },
             submitForm:function(){
                 let form_name = this.clickType=='sign_in' ? 'sign_in_form':'sign_up_form';
+                let self = this;
                 this.$refs[form_name].validate((valid) => {
                   if (valid) {
                     let data;
                     let url;
 
-                    if (this.clickType=='sign_in'){
+                    if (self.clickType=='sign_in'){
                         data = {
-                            mobile:this.sign_in_form.user_name,
-                            password1:this.sign_in_form.password1,
+                            mobile:self.sign_in_form.user_name,
+                            password1:self.sign_in_form.password1,
                         }
                         url = 'sign_in';
                         }
                     else{
                         data = {
-                            mobile:this.sign_up_form.user_name,
-                            password1:this.sign_up_form.password1,
-                            password2:this.sign_up_form.password2,
-                            verify_code:this.sign_up_form.verify_code
+                            mobile:self.sign_up_form.user_name,
+                            password1:self.sign_up_form.password1,
+                            password2:self.sign_up_form.password2,
+                            verify_code:self.sign_up_form.verify_code
                         }
                         url = 'sign_up';
                     }
@@ -122,7 +121,7 @@
                             let base_url = window.location.host;
                             window.location.href = '/'+json.redirect_url
                         }else{
-                            Message.error(json.message)
+                            Message.error({message:json.message,showClose:true})
                         }
                     })
                   } else {

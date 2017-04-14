@@ -1,7 +1,7 @@
 # -*-coding:utf-8-*-
 from .common import ApiAction, request_method_check, Argument, parse_arguments
 import pickle
-from backend.models import Order, QrcodeMenu
+from backend.models import Order, QrcodeMenu, Menu
 from flask_login import current_user
 from datetime import datetime
 import pytz
@@ -30,6 +30,8 @@ class OrderApi(ApiAction):
         quantity_list = pickle.dumps(arguments['quantity_list'])
         arguments.update({'menu_list': menu_list, 'quantity_list': quantity_list, 'item_status_list': item_status_list})
         result = Order(**arguments).save()
+        # update quantity
+        Menu.update_quantity(menu_list, quantity_list)
         return self.is_done('order success') if result else self.is_fail('order fail')
 
     @request_method_check(['POST'])
@@ -65,6 +67,8 @@ class OrderApi(ApiAction):
             'quantity_list': pickle.dumps(arguments['quantity_list']),
             'order_price': order_price, 'oid': oid, 'item_status_list': pickle.dumps(item_status_list)})
         result = Order.update(arguments, ['oid'])
+        # update quantity
+        Menu.update_quantity(menu_list, quantity_list)
         if result:
             return self.is_done({'update': 'success'})
         else:

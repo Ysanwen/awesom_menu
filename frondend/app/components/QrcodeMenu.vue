@@ -41,7 +41,7 @@
                 loadingInstance.close();
             }else{
                 loadingInstance.close();
-                Message.error({message:json.message,showClose:true});
+                Message.info({message:'请生成二维码菜单',showClose:true});
             }
         })
       },

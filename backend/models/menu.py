@@ -37,6 +37,15 @@ class Menu(BaseModel):
         self.status = kwargs.get('status', None) if kwargs.get('status', None) else Menu.ONSELL
         self.create_time = datetime.now(pytz.timezone('Asia/Shanghai'))
 
+    @classmethod
+    def update_quantity(cls, menu_list, quantity_list):
+        for index in range(len(menu_list)):
+            menu_id = menu_list[index]['id']
+            menu_item = cls.find_one(id=menu_id)
+            quantity_item = quantity_list[index]
+            new_quantity = menu_item['quantity'] - quantity_item
+            cls.update({'id': menu_id, 'quantity': new_quantity}, ['id'])
+
 
 @BaseModel.register_table(primary_id='id', primary_type='Integer')
 class Category(BaseModel):

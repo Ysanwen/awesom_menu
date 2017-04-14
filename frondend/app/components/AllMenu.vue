@@ -43,9 +43,12 @@
             if(json.success){
                 that.menuData = json.data;
                 loadingInstance.close();
+                if(json.data.length==0){
+                  Message.info({message:'请添加菜单',showClose:true})
+                }
             }else{
                 loadingInstance.close();
-                Message.error(json.message);
+                Message.error({message:json.message,showClose:true});
             }
         })
       },
