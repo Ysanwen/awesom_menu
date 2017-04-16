@@ -43,21 +43,21 @@ python manage.py runserver
 ```
 
 ## 相关截图 
-![菜单管理](doc/addMenu.png)![]
-(doc/allMenu.png)
+![菜单管理](doc/addMenu.png)
+![](doc/allMenu.png)
 
 ![二维码菜单](doc/qrcodeMenu.png)
 
 ![订单管理](doc/order.png)
 
-![手机端](doc/mobileIndex.png)![]
-(doc/mobileSelect.png)![]
-(doc/mobileOrder.png)
+![手机端](doc/mobileIndex.png)
+![](doc/mobileSelect.png)
+![](doc/mobileOrder.png)
 
 
 ## 采用的相关技术
-- ![vue-router](https://router.vuejs.org/zh-cn/)
-- ![vuex](https://vuex.vuejs.org/zh-cn/intro.html)
-- ![element-ui](http://element.eleme.io/)
-- ![flask](http://docs.jinkan.org/docs/flask/)
+- [vue-router](https://router.vuejs.org/zh-cn/)
+- [vuex](https://vuex.vuejs.org/zh-cn/intro.html)
+- [element-ui](http://element.eleme.io/)
+- [flask](http://docs.jinkan.org/docs/flask/)
 
