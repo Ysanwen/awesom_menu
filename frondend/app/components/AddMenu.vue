@@ -111,7 +111,7 @@
             this.url_list_len -= 1;
           }
           else{
-            this.url_list.splice(indx,1);
+            this.url_list.splice(index,1);
             this.upload_file_list.splice(index-this.url_list_len, 1);
           }
         }

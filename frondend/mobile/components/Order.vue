@@ -1,41 +1,56 @@
 <template>
-    <div id="mobile-order">
-        <div class="header">
-          <mt-header fixed :title="table.table_name" id="header-area"></mt-header>
-        </div>
-        <div class="header-nav">
-          <mt-button class="button-menu" type="default" @click="goToIndex">继续点单</mt-button>
-          <mt-button class="button-menu" :type="showOrder?'default':'primary'" @click="showSlected">当前已选</mt-button>
-          <mt-button class="button-menu" :type="showOrder?'primary':'default'" @click="showOrders">已点订单</mt-button>
-          
-        </div>
-        <div v-if="showOrder" class="content order-content">
-          <div v-for='(con,index) in orderItemList' class="order-item">
-            <!-- add menu item conponent -->
-            <show-menu-item :item="con" v-bind:defaultQuantity='orderItemQuantity[index]' :key="con.name+'s'"></show-menu-item>
-          </div>
-        </div>
-        <div v-else class="content order-content">
-          <div v-for='(con,index) in selectedItemList' class="order-item">
-            <!-- add menu item conponent -->
-            <show-menu-item :item="con" v-bind:defaultQuantity='selectedItemQuantity[index]' :key="con.name+'n'"></show-menu-item>
-          </div>
-        </div>
-        <div v-if="showOrder" id="footer">
-          <div class="footer-left" :style="totalOrderQuantity > 0 ? hasSelect:noSelect">
-            <span class="has-choosed">已选{{ totalOrderQuantity }}份</span>
-            <span>总价{{ totalOrderPrice.toFixed(2) }}元</span>
-          </div>
-          <div class="footer-right" @click="PayOrder">支付</div>
-        </div>
-        <div v-else id="footer">
-          <div class="footer-left" :style="totalSelectValue > 0 ? hasSelect:noSelect">
-            <span class="has-choosed">已选{{ totalSelectValue }}份</span>
-            <span>总价{{ totalPriceValue.toFixed(2) }}元</span>
-          </div>
-          <div class="footer-right" @click="submitOrder">{{ totalSelectValue>0? '确认下单':'还未选单'}}</div>
-        </div>
+  <div id="mobile-order">
+    <div class="header">
+      <mt-header fixed :title="table.table_name" id="header-area"></mt-header>
     </div>
+    <div class="header-nav">
+      <mt-button class="button-menu" type="default" @click="goToIndex">继续点单</mt-button>
+      <mt-button class="button-menu" :type="showOrder?'default':'primary'" @click="showSlected">当前已选</mt-button>
+      <mt-button class="button-menu" :type="showOrder?'primary':'default'" @click="showOrders">已点订单</mt-button>  
+    </div>
+    <div v-if="showOrder" class="content order-content">
+      <template v-if="orderItemList.length>0">
+        <div v-for='(con,index) in orderItemList' class="order-item">
+          <!-- add menu item conponent -->
+          <show-menu-item :item="con" v-bind:defaultQuantity='orderItemQuantity[index]' :key="con.name+'s'"></show-menu-item>
+        </div>
+      </template>
+      <template v-else>
+        <div class="no-order-content">
+          还没点单，<span class="make-order" @click="goToIndex">现在点单</span>
+        </div>            
+      </template>
+    </div>
+    <div v-else class="content order-content">
+      <template v-if="selectedItemList.length>0">
+        <div v-for='(con,index) in selectedItemList' class="order-item">
+          <!-- add menu item conponent -->
+          <show-menu-item :item="con" v-bind:defaultQuantity='selectedItemQuantity[index]' :key="con.name+'n'"></show-menu-item>
+        </div>
+      </template>
+      <template v-else>
+        <div class="no-order-content">
+          没有在选内容，<span class="make-order" @click="goToIndex">继续选择</span>
+        </div>            
+      </template>
+    </div>
+    <div v-if="showOrder" id="footer">
+      <div class="footer-left" :style="totalOrderQuantity > 0 ? hasSelect:noSelect">
+        <span class="has-choosed">已选{{ totalOrderQuantity }}份</span>
+        <span>总价{{ totalOrderPrice.toFixed(2) }}元</span>
+      </div>
+      <div v-if="totalOrderQuantity > 0" class="footer-right" @click="PayOrder">支付</div>
+      <div v-else class="footer-right un-click">支付</div>
+    </div>
+    <div v-else id="footer">
+      <div class="footer-left" :style="totalSelectValue > 0 ? hasSelect:noSelect">
+        <span class="has-choosed">已选{{ totalSelectValue }}份</span>
+        <span>总价{{ totalPriceValue.toFixed(2) }}元</span>
+      </div>
+      <div v-if="totalSelectValue>0" class="footer-right" @click="submitOrder">确认下单</div>
+      <div v-else class="footer-right un-click">还未选单</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -44,6 +59,7 @@
   import ApiRequest from '../../app/common/ApiRequest.js'
 
   export default{
+    name:'order',
     components:{
       ShowMenuItem
     },
@@ -105,7 +121,10 @@
         this.$store.dispatch('changeShowOrder',false);
       },
       PayOrder:function(){
-        console.log('pay it');
+        Toast({
+          message: '请至收银台结算',
+          duration: 2000
+        });
       },
       submitOrder:function(){
         let menu_list = this.selectedItemList;
@@ -128,8 +147,7 @@
           let that = this;
 
           ApiRequest.ajPost(url,post_data,(json)=>{
-            if(json.success){
-              
+            if(json.success){      
               Toast({
                 message: '下单成功',
                 duration: 1000
@@ -156,7 +174,7 @@
     }
   }
 </script>
-<style scoped>
+<style>
   .header-nav{
     margin-top: 40px;
     height: 4rem;
@@ -172,10 +190,21 @@
     width: 30%;
   }
   .order-content{
+    width: 100%;
     margin-top: 6.5rem;
     margin-left: 0.5rem;
     position: absolute;
     margin-bottom: 2.5rem;
+  }
+  .no-order-content{
+    width: 100%;
+    height: 6rem;
+    line-height: 6rem;
+    text-align: center;
+    color: #999;
+  }
+  .make-order{
+    color: rgba(0, 0, 255, 0.55);
   }
   .order-content .food-img{
     width: 30%;
@@ -188,5 +217,8 @@
   .order-content .food-content{
     width: 65%;
     float: right;
+  }
+  .un-click{
+    background-color: #999 !important;
   }
 </style>

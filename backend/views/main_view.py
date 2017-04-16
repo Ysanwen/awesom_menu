@@ -53,7 +53,7 @@ def sign_up():
     if mobile and password1 and password2 and verify_code:
         if password1 != password2:
             return jsonify({"success": False, "message": "password is not correct"})
-        if verify_code != int(session.get(str(mobile), None)):
+        if int(verify_code) != int(session.get(str(mobile), None)):
             return jsonify({"success": False, "message": "verify_code is not correct"})
         if User.find_one(mobile=int(mobile)):
             return jsonify({"success": False, "message": "mobile is already exist"})

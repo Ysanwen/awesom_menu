@@ -7,6 +7,7 @@ from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 from backend import login_manager
 import pytz
+import pickle
 
 
 @BaseModel.register_table()
@@ -19,16 +20,20 @@ class User(BaseModel):
         'password': sqlalchemy.String,
         'mobile': sqlalchemy.BigInteger,
         'create_time': sqlalchemy.DateTime,
+        'ad': sqlalchemy.String,
+        'url_list': sqlalchemy.String,
         'isActive': sqlalchemy.Boolean
     }
 
-    def __init__(self, mobile, password, id=str(uuid1()), username='unknow'):
+    def __init__(self, mobile, password, id=str(uuid1()), username=''):
         # self.uid = self.uid_filed['uid'] + 1
         self.id = id
         self.username = username
         self.password = generate_password_hash(password)
         self.mobile = mobile
         self.create_time = datetime.now(pytz.timezone('Asia/Shanghai'))
+        self.ad = ''
+        self.url_list = ''
         self.isActive = True
 
     @staticmethod
@@ -68,6 +73,12 @@ class User(BaseModel):
 def load_user(uid):
     user = User.find_by_id(uid)
     if user:
+        if('url_list' in user and user['url_list']):
+            user['url_list'] = pickle.loads(user['url_list'])
+        else:
+            user['url_list'] = []
+        if('password' in user):
+            del user['password']
         new_instance = User('default', 'default')
         for k in user.keys():
             setattr(new_instance, k, user[k])

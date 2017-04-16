@@ -25,10 +25,11 @@ class OrderApi(ApiAction):
 
         # 初始化每个菜的状态
         menu_list = arguments['menu_list']
+        quantity_list = arguments['quantity_list']
         item_status_list = pickle.dumps([Order.ItemStatus['notBegin']] * len(menu_list))
-        menu_list = pickle.dumps(menu_list)
-        quantity_list = pickle.dumps(arguments['quantity_list'])
-        arguments.update({'menu_list': menu_list, 'quantity_list': quantity_list, 'item_status_list': item_status_list})
+        store_menu_list = pickle.dumps(menu_list)
+        store_quantity_list = pickle.dumps(quantity_list)
+        arguments.update({'menu_list': store_menu_list, 'quantity_list': store_quantity_list, 'item_status_list': item_status_list})
         result = Order(**arguments).save()
         # update quantity
         Menu.update_quantity(menu_list, quantity_list)
@@ -90,6 +91,13 @@ class OrderApi(ApiAction):
             status = arguments.get('status', None)
             if status and status in [Order.CANCLE, Order.HASPAID, Order.NOTPAID]:
                 result = Order.update({'oid': oid, 'status': status}, ['oid'])
+                # 撤销订单时，恢复可售数量
+                if(status == Order.CANCLE):
+                    current_order = Order.find_one(oid=oid)
+                    menu_list = pickle.loads(current_order['menu_list'])
+                    quantity_list = pickle.loads(current_order['quantity_list'])
+                    quantity_list = map(lambda x: -x, quantity_list)
+                    Menu.update_quantity(menu_list, quantity_list)
                 return self.is_done({'modify': 'success'}) if result else self.is_fail('update error!')
             else:
                 return self.is_fail('status is not right')
@@ -126,6 +134,19 @@ class OrderApi(ApiAction):
         result = Order.update({
             'oid': oid, 'pay_type': pay_type, 'actuality_paid': actuality_paid,
             'comment': comment, 'paid_time': paid_time, 'status': Order.HASPAID}, ['oid'])
+        # 更新销售量至每一个单品，后续可采用消息队列的方式完成
+        try:
+            find_order = Order.find_one(oid=oid)
+            menu_list = pickle.loads(find_order['menu_list'])
+            quantity_list = pickle.loads(find_order['quantity_list'])
+            for index in range(len(quantity_list)):
+                menu = menu_list[index]
+                quantity = quantity_list[index]
+                find_menu = Menu.find_one(id=menu['id'])
+                monthly_sales = find_menu['monthly_sales'] + quantity
+                Menu.update({'id': menu['id'], 'monthly_sales': monthly_sales}, ['id'])
+        except Exception as e:
+            pass
         return self.is_done({'paid': 'success'}) if result else self.is_fail('paid fail')
 
     @request_method_check(['GET'])

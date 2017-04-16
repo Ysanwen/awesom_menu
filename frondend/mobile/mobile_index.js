@@ -12,18 +12,19 @@ Vue.use(MintUI);
 // Vue.component(Header.name, Header);
 
 var mobile_app = new Vue({
-    el:'#mobile',
-    store,
-    components:{
-        MobileIndex,
-        Order
-    },
-    created:function () {
-        store.dispatch('initData');
-    },
-    computed:{
-        showTag:function(){
-            return store.state.showTag;
-        }
+  name:'index',
+  el:'#mobile',
+  store,
+  components:{
+    MobileIndex,
+    Order
+  },
+  created:function () {
+    store.dispatch('initData');
+  },
+  computed:{
+    showTag:function(){
+      return store.state.showTag;
     }
+  }
 });

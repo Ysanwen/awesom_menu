@@ -14,7 +14,7 @@ Vue.use(Input);
 var ap = new Vue({
     el: '#app',
     data: {
-        message: 'Awesome !!!',
+        message: 'Awesome Menu !!!',
         showDialog: false,
         clickType:''
     },

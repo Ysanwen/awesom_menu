@@ -195,10 +195,24 @@
 
         let item_status_list = order['item_status_list'];
         let isCompleted = item_status_list.map((item)=>{return item=='制作完成'}).reduce((pre,cur)=>{return pre&&cur});
+        // if(!isCompleted){
+        //   Message.info('还有未完成项，不能结算');
+        //   return
+        // }else{
+        //   this.dialogVisible = true;
+        //   this.currentOrder = order;
+        // }
         if(!isCompleted){
-          Message.info('还有未完成项，不能结算');
-          return
-        }else{
+          MessageBox.confirm('还有制作中菜品, 确认先结账?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(()=>{
+            this.dialogVisible = true;
+            this.currentOrder = order;
+          })
+        }
+        else{
           this.dialogVisible = true;
           this.currentOrder = order;
         }
@@ -286,10 +300,6 @@
   }
   .pay-form{
     margin-top: 1rem;
-  }
-  .input-money{
-    width: 25%;
-    margin-left: 5%;
   }
 
 </style>
