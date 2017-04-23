@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueSocketio from 'vue-socket.io'
 import { Row,Col,Menu,Submenu,MenuItem,MenuItemGroup,Dropdown,Button,DropdownItem,DropdownMenu, Collapse,CollapseItem,Pagination,Radio,RadioGroup} from 'element-ui'
 import { Message } from 'element-ui'
 import './admin_panel.less'
@@ -18,6 +19,7 @@ for (let item in import_list){
 } 
 
 Vue.use(VueRouter);
+Vue.use(VueSocketio, '127.0.0.1:5000');
 
 const router = new VueRouter({
   routes:[

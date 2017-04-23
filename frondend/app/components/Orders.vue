@@ -93,19 +93,10 @@
       }
     },
     mounted: function(){
-      let url = "order/get_all_orders";
-      let loadingInstance = Loading.service({text:'加载中......'});
-      let self = this;
-      ApiRequest.ajGet(url, (json)=>{
-        if(json.success){
-          self.totalItems = json.data;
-          loadingInstance.close();
-        }
-        else{
-          loadingInstance.close();
-          Message.error(json.message);
-        }
-      })
+      
+      this.laodData();
+      // trigger socket
+      this.joinRoom();
     },
     computed:{
       displayItems: function(){
@@ -115,7 +106,37 @@
         return this.totalItems.length;
       }
     },
+    sockets:{
+      connect: function(){
+        console.log('socket connected')
+      },
+      serverback: function(data){
+        console.log('receive!!!');
+        if(data==="newOrder"){
+          this.laodData();
+        }
+      }
+    },
     methods: {
+      // add socket
+      joinRoom: function(){
+        this.$socket.emit("enter room", { uid: this.$parent.$parent.current_user.id });
+      },
+      laodData: function(){
+        let url = "order/get_all_orders";
+        let loadingInstance = Loading.service({text:'加载中......'});
+        let self = this;
+        ApiRequest.ajGet(url, (json)=>{
+          if(json.success){
+            self.totalItems = json.data;
+            loadingInstance.close();
+          }
+          else{
+            loadingInstance.close();
+            Message.error(json.message);
+          }
+        })
+      },
       inProduction: function(itemList){
         let status_list = itemList['item_status_list'];
         let quantity_list = itemList['quantity_list'];

@@ -4,6 +4,8 @@ import pickle
 from backend.models import Order, QrcodeMenu, Menu
 from flask_login import current_user
 from datetime import datetime
+from backend import socketio
+from flask_socketio import emit
 import pytz
 
 
@@ -33,6 +35,10 @@ class OrderApi(ApiAction):
         result = Order(**arguments).save()
         # update quantity
         Menu.update_quantity(menu_list, quantity_list)
+
+        # 通过socket通知菜单界面刷新
+        if result:
+            socketio.emit('serverback', 'newOrder', room=arguments['uid'])
         return self.is_done('order success') if result else self.is_fail('order fail')
 
     @request_method_check(['POST'])
@@ -71,6 +77,8 @@ class OrderApi(ApiAction):
         # update quantity
         Menu.update_quantity(menu_list, quantity_list)
         if result:
+            # 通过socket通知菜单界面刷新
+            socketio.emit('serverback', 'newOrder', room=find_order['uid'])
             return self.is_done({'update': 'success'})
         else:
             return self.is_fail('update error!')
