@@ -121,6 +121,10 @@ def parse_arguments(*ars):
                             new_arguments[item.name] = item.text_type(arguments[item.name])
                         else:
                             return jsonify({'param error': 'the type of {0} should be {1}'.format(item.name, item.text_type)})
+            # for decode chinese to utf-8
+            for item in new_arguments:
+                if type(new_arguments[item]) == str:
+                    new_arguments[item] = new_arguments[item].decode('utf-8')
             args = tuple([args[0], new_arguments])
             return f(*args, **kwargs)
         return wrapper

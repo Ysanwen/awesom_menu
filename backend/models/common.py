@@ -1,8 +1,9 @@
 # -*-coding:utf-8-*-
 
+from flask import has_request_context
 from backend import db
 # from uuid import uuid1
-from backend import app
+# from backend import app
 
 
 class BaseModel(dict):
@@ -21,7 +22,7 @@ class BaseModel(dict):
         decorator of cls,to auto create table
         """
         def decorator(cls):
-            with app.test_request_context():
+            if has_request_context():
                 if table_name:
                     _table_name = table_name
                     cls.__table_name = table_name
@@ -33,7 +34,7 @@ class BaseModel(dict):
                 if sorted(cls.__column_fileds__.keys()) != sorted(new_table.columns):
                     key_list = cls.__column_fileds__.keys()
                     map(new_table.create_column, key_list, [cls.__column_fileds__[k] for k in key_list])
-                return cls
+            return cls
         return decorator
 
     @classmethod

@@ -4,7 +4,8 @@ import os
 
 DEBUG = True
 
-DATASET_DATABASE_URI = 'postgresql://awesome:awesome@127.0.0.1:5432/awesomedb'
+# DATASET_DATABASE_URI = 'postgresql://awesome:awesome@127.0.0.1:5432/awesomedb'
+DATASET_DATABASE_URI = 'sqlite:///awesomedb.db'
 
 # make the base dir to awesome
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -17,7 +18,7 @@ SECRET_KEY = '\x88\xaf\x90e\xc6D\xf5\xa5\x17\xcf\xd0Hc\x00!\xbfh\xc3\x06\xd2#\xe
 
 APP_NAME = 'awesome'
 
-#server address
+# server address
 SERVER_HOST = 'http://localhost:5000'
 
 # for jsonify deal with chinese

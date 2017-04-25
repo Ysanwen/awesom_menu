@@ -11,7 +11,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import dataset
 
 from dataset.persistence.util import row_type
-from flask import _app_ctx_stack as stack
+try:
+    from flask import _app_ctx_stack as stack
+except ImportError:
+    from flask import _request_ctx_stack as stack
 from flask import current_app, has_request_context
 
 from werkzeug.utils import cached_property
